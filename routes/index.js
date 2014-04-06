@@ -13,9 +13,10 @@ exports.tohome = function(db,homepage)
         var collection = db.get('louvers_type');
         collection.find({},{},function(e,docs){
             res.render('index', {
-                "louverslist" : docs, title: 'Express', "homepage": homepage
+                "louverslist" : docs, title: 'Жалюзи и рольставни', "homepage": homepage
             });
          console.log(docs);
+         //console.log(this.address().port);
         });
     };
 };
@@ -24,6 +25,7 @@ exports.adminka = function(db,homepage)
 {
     return function(reg,res)
     {
+        console.log(homepage);
         res.render('adminka',{
             "homepage": homepage
         });
@@ -38,4 +40,27 @@ exports.admin_zhaluzi = function(db,homepage)
             "homepage": homepage
         });
     }
+}
+
+exports.admin_orders = function(db,homepage)
+{
+    return function(reg,res)
+    {
+        var collection = db.get('orders');
+        collection.find({},{},function(e,docs){
+            res.render('orders-admin', {
+                "orderlist" : docs, title: 'Поступившие заявки', "homepage": homepage
+            });
+        });
+    };
+};
+
+exports.addOrder = function(db,name,mail,phone,address,data,comment)   //пока без комментария, ибо хз, что с большим текстом делать.
+{
+    var collection = db.get('orders');
+    collection.insert({name:name,mail:mail,phone:phone,address:address,order_data:data,comment:comment});
+    collection.find({},{},function(e,docs)
+    {
+        console.log(docs);
+    });
 }

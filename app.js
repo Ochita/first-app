@@ -23,34 +23,31 @@ app.use(app.router);
 app.use("/styles", express.static(__dirname + '/templates/stylesheets'));
 app.use("/images",express.static(__dirname+'/templates/img'));
 app.use("/js",express.static(__dirname+'/templates/js'));
+app.use("/modules",express.static(__dirname+'/node_modules/'));
 
 app.get('/', routes.tohome(db,homepage));
 app.get('/admin',routes.adminka(db,homepage));
 app.get('/admin/zhaluzi',routes.admin_zhaluzi(db,homepage));
+app.get('/admin/orders',routes.admin_orders(db,homepage));
 
 app.use(express.static(path.join(__dirname,'../public')));	//я не знаю, что это и зачем, надо будет погуглить
 
-http.createServer(app).listen(config.get('port'), function(){
+server = http.createServer(app).listen(config.get('port'), function(){
   console.log('Express server listening on port ' + config.get('port'));
 homepage = "http://"+this.address().address+":"+this.address().port;
 console.log("homepage = "+homepage);
 });
 
-//app.set('port',config.get('port'));
-//app.engine('html', ejs.renderFile);
+var io = require('socket.io').listen(server);
+io.set('log level', 1);
 
-/*app.use(function(reg,res,next) {
-	if (reg.url=='/') {
-		res.sendfile('hello.html');
-	} else {
-	next();
-	}
+io.sockets.on('connection', function (socket) 
+{
+	socket.on('newOrder', function (msg) 
+	{
+		routes.addOrder(db,msg.contact_name,msg.contact_mail,msg.contact_phone,
+			msg.contact_address,msg.contact_data,msg.contact_message);
 	});
+});
 
-app.use(function(reg,res,next){
-	if (reg.url=='/test') {
-		res.end("Test");
-	}else{
-		next();
-	}
-	});*/
+//http.createServer(app).listen(3001,'128.73.218.95/');
