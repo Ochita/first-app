@@ -22,7 +22,7 @@ app.set('view engine','jade');	//!!!!!JADE
 //app.use(express.urlencoded());// то, что стало вместо bodyParser
 app.use(express.bodyParser({uploadDir:'./templates/img'}));
 app.use(express.cookieParser());
-app.use(express.session());
+//app.use(express.session());
 app.use(app.router);
 
 app.use("/styles", express.static(__dirname + '/templates/stylesheets'));

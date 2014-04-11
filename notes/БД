@@ -1,0 +1,28 @@
+типы жалюзи
+name
+address
+description
+
+типы рольставней
+name
+address
+description
+
+Жалюзи
+name
+type
+calc-price
+promo-price
+description(html)
+image1
+image2
+image3
+
+Рольставни
+name
+type_roller
+type_global (кроме самих рольставней, могут быть еще автоматика, типы управления, монтаж)
+img (одно)
+calc-price
+promo-price
+desxription(html)

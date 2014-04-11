@@ -1,0 +1,21 @@
+cd ~/mongodb/mongodb-linux-x86_64-2.4.9/bin
+mongo
+use data
+
+> show collections
+louvers
+louvers_type
+orders
+rollers
+rollers_type
+system.indexes
+
+
+cd ~/projects/node-tutorial/first-app/
+node app
+
+git add .
+git ci -m "initial_commit_5"
+git push -u origin master
+#kartachena
+#jane1892
