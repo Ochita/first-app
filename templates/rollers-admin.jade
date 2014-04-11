@@ -1,0 +1,131 @@
+extends layout_admin
+
+block content
+    //script(src='#{homepage}/js/myJS_louvers_type_list.js')
+    div(class="navbar navbar-default")
+      div(class="navbar-inner")
+        a(class="brand" href="#">Имя проекта)
+        ul(class="nav navbar-nav")
+          li
+            a(href="#{homepage}") Выход на главную
+          li
+            a(href="#") О компании
+          li(class="dropdown")
+            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
+              b(class="caret")
+            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+              li
+                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-types") Типы жалюзи
+              li
+                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-positions") Виды жалюзи
+          li(class="dropdown active")
+            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Рольставни
+              b(class="caret")
+            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+              li
+                a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставней
+              li
+                a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставней
+          li
+            a(href="#{homepage}/admin/orders") Заявки
+          li
+            a(href="#") Контакты            
+    ul
+      each roller, i in rlist
+        li
+          p=("ID: "+roller._id)
+          p=("Тип: "+roller.type)
+          p=("Цена (калькулятор): "+roller.calc_price)
+          p=("Цена (промо): "+roller.promo_price)
+          a(href="#" id="delete_#{roller._id}" class="delete_rollers_type") удалить тип
+          br
+          a(href="#" role="button" id="edit_#{roller._id}" class="edit_rollers_type" data-toggle="modal") редактировать тип
+          p   
+
+    a(href="#AddRoller" role="button" id="AddRollerType" class="AddRoller" data-toggle="modal") Добавить новый вид
+    //form(enctype="multipart/form-data" method="post" action="/upload")
+    form()
+      div(class="modal" id="AddRoller" tabindex="-1" role="dialog" aria-labelledby="AddRollerLabel" aria-hidden="true")
+        div(class="modal-dialog")
+          div(class="modal-content")
+            div(class="modal-header")
+              button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
+              h3(id="AddRollerLabel") Добавление вида
+            div(class="modal-body")
+              label Название вида:
+              br
+              input(id="namen" style="width: 377px;" type="text" name="name" value="" size="70")
+              br
+              label Цена(калькулятор):
+              br
+              input(id="cpricen" style="width: 377px;" type="text" name="name" value="" size="70")
+              br
+              label Цена(промо):
+              br
+              input(id="ppricen" style="width: 377px;" type="text" name="name" value="" size="70")
+              br
+              label Тип позиции:
+              br
+              select(name="types" style="width : 377px")
+                each roller, i in rollerslist
+                  option(value=i)=roller.name
+              br
+              br
+              label Глобальный тип:
+              br
+              select(name="types" style="width : 377px")
+                option(value=1) Рольставни
+                option(value=2) Автоматика
+                option(value=3) Тип управления
+                option(value=4) Монтаж
+              br
+              br
+              label Описание:
+              br
+              textarea(id="descriptionn" style="width: 377px;" name="description" rows="7" cols="86")
+            div(class="modal-footer")
+              button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
+              button(class="btn btn-primary" id='AddLType' href="#" type="submit") Отправить
+    //окно редактирования          
+    form()
+      div(class="modal" id="EditRoller" tabindex="-1" role="dialog" aria-labelledby="EditRollerLabel" aria-hidden="true")
+        div(class="modal-dialog")
+          div(class="modal-content")
+            div(class="modal-header")
+              button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
+              h3(id="EditRollerLabel") Редактирование вида
+            div(class="modal-body")
+              label Название вида:
+              br
+              input(id="name" style="width: 377px;" type="text" name="name" value="" size="70")
+              br
+              label Цена(калькулятор):
+              br
+              input(id="cprice" style="width: 377px;" type="text" name="name" value="" size="70")
+              br
+              label Цена(промо):
+              br
+              input(id="pprice" style="width: 377px;" type="text" name="name" value="" size="70")
+              br
+              label Тип позиции:
+              br
+              select(name="types" style="width : 377px")
+                each roller, i in rollerslist
+                  option(value=i)=roller.name
+              br
+              br
+              label Глобальный тип:
+              br
+              select(name="types" style="width : 377px")
+                option(value=1) Рольставни
+                option(value=2) Автоматика
+                option(value=3) Тип управления
+                option(value=4) Монтаж
+              br
+              br
+              label Описание:
+              br
+              textarea(id="description" style="width: 377px;" name="description" rows="7" cols="86")
+            div(class="modal-footer")
+              button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
+              button(class="btn btn-primary" id='EditLType' href="#" type="submit") Отправить
