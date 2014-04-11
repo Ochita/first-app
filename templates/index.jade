@@ -1,27 +1,33 @@
 extends layout
 
 block content
-    div(class="navbar")
-      div(class="navbar-inner")
-        a(class="brand" href="#">Имя проекта)
-        ul(class="nav")
-          li(class="active")
-            a(href="#{homepage}") Главная
-          li
-            a(href="#") О компании
-          li(class="dropdown")
-            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
-              b(class="caret")
-            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
-              each louver, i in louverslist
-                li
-                  a(tabindex="-1" href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
-          li
-            a(href="#") Рольставни
-          li
-            a(href="#") Контакты
-          li
-            a(href="#{homepage}/admin/") adminka
+    div(class="bs-component")
+      div(class="navbar navbar-default")
+        div(class="navbar-inner")
+          a(class="brand" href="#">Имя проекта)
+          ul(class="nav navbar-nav")
+            li(class="active")
+              a(href="#{homepage}") Главная
+            li
+              a(href="#") О компании
+            li(class="dropdown")
+              a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
+                b(class="caret")
+              ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+                each louver, i in louverslist
+                  li
+                    a(tabindex="-1" href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
+            li(class="dropdown")
+              a(id="drop2" href="#" class="dropdown-toggle" data-toggle="dropdown") Рольставни
+                b(class="caret")
+              ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+                each roller, i in rollerslist
+                  li
+                    a(tabindex="-1" href="#{homepage}/rolstavni/#{roller.adress}")= roller.name
+            li
+              a(href="#") Контакты
+            li
+              a(href="#{homepage}/admin/") adminka
     br
     div(id="myCarousel" class="carousel slide" data-ride="carousel" style="width:800px; height:300px; margin: 0 auto")
       div(class="carousel-inner")
@@ -34,27 +40,41 @@ block content
       a(class="carousel-control left" href="#myCarousel" data-slide="prev") &lsaquo;
       a(class="carousel-control right" href="#myCarousel" data-slide="next") &rsaquo;
     br
+
+    //form(method="post" enctype="multipart/form-data" action="/upload")
+    //  input(type="file" name="file")
+    //  input(type="submit" value="Submit")
     button.btn Калькулятор
     button.btn Конструктор
     button(href="#myModal" role="button" class="btn" data-toggle="modal") Вызов замерщика
 
-    div(class="modal hide fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
-      div(class="modal-header")
-        button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
-        h3(id="myModalLabel") Вызов замерщика
-      div(class="modal-body")
-        label ФИО
-        input(id="contact_name" style="width: 377px;" type="text" name="contact_name" value="" size="70")
-        label E-mail
-        input(id="contact_mail" style="width: 377px;" type="text" name="contact_mail" value="" size="70")
-        label Телефон
-        input(id="contact_phone" style="width: 377px;" type="text" name="contact_phone" value="" size="70")
-        label Полный адрес
-        input(id="contact_address" style="width: 377px;" type="text" name="contact_address" value="" size="70")
-        label Комментарий
-        textarea(id="contact_message" style="width: 377px;" name="contact_message" rows="7" cols="86")
-      div(class="modal-footer")
-        button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
-        button(class="btn btn-primary" id='newOrder' href="#{homepage}/newOrder/") Отправить
-      //script
-        //Init("#{homepage}")
+    div(class="bs-component")
+      div(class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
+        div(class="modal-dialog")
+          div(class="modal-content")
+            div(class="modal-header")
+              button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
+              h3(id="myModalLabel") Вызов замерщика
+            div(class="modal-body")
+              label ФИО
+              br
+              input(id="contact_name" style="width: 377px;" type="text" name="contact_name" value="" size="70")
+              br
+              label E-mail
+              br
+              input(id="contact_mail" style="width: 377px;" type="text" name="contact_mail" value="" size="70")
+              br
+              label Телефон
+              br
+              input(id="contact_phone" style="width: 377px;" type="text" name="contact_phone" value="" size="70")
+              br
+              label Полный адрес
+              br
+              input(id="contact_address" style="width: 377px;" type="text" name="contact_address" value="" size="70")
+              br
+              label Комментарий
+              br
+              textarea(id="contact_message" style="width: 377px;" name="contact_message" rows="7" cols="86")
+            div(class="modal-footer")
+              button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
+              button(class="btn btn-primary" id='newOrder' href="#{homepage}/newOrder/") Отправить

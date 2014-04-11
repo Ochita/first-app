@@ -1,19 +1,40 @@
 extends layout_admin
 
 block content
-    div(class="navbar")
+    script(src='#{homepage}/js/myJS_orderlist.js')
+    div(class="navbar navbar-default")
       div(class="navbar-inner")
         a(class="brand" href="#">Имя проекта)
-        ul(class="nav")
+        ul(class="nav navbar-nav")
           li
             a(href="#{homepage}") Выход на главную
           li
             a(href="#") О компании
-          li
-            a(href="#") Жалюзи
-          li
-            a(href="#") Рольставни
+          li(class="dropdown")
+            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
+              b(class="caret")
+            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+              li
+                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-types") Типы жалюзи
+              li
+                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-positions") Виды жалюзи
+          li(class="dropdown")
+            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Рольставни
+              b(class="caret")
+            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+              li
+                a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставней
+              li
+                a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставней
           li(class="active")
-            a(href="#") Заявки
+            a(href="#{homepage}/admin/orders") Заявки
           li
-            a(href="#") Контакты            
+            a(href="#") Контакты                    
+    ul
+      each order, i in orderlist
+        li
+          p=("ID заявки: "+order._id+" , дата: "+order.order_data) 
+          p=("От: "+order.name+", "+order.mail+", "+order.phone+", "+order.address)
+          p!=("Комментарий: <br>"+order.comment)
+          a(href="#" id="delete_#{order._id}" class="delete_order") удалить заявку
+          p 
