@@ -3,10 +3,12 @@ var http = require('http');
 var path = require('path');
 var fs = require('fs');
 var config = require('config');
-var ejs = require('ejs');
+//var ejs = require('ejs');
 var routes = require('./routes');
-var multipart = require('multipart');
-var sys = require('sys');
+var dl = require('delivery');
+//var multipart = require('multipart');
+//var sys = require('sys');
+//var SocketIOFileUploadServer = require("socketio-file-upload");
 
 //MONGODB
 var mongo = require('mongodb');
@@ -38,35 +40,7 @@ app.get('/admin/rollers-types',routes.admin_rollers(db,homepage));
 app.get('/admin/rollers-positions',routes.admin_rollers0(db,homepage));
 app.get('/admin/orders',routes.admin_orders(db,homepage));
 
-app.get('/upload',upload_file());
-
 app.use(express.static(path.join(__dirname,'../public')));	//я не знаю, что это и зачем, надо будет погуглить
-
-/*app.post('/upload', function (req, res) {
-    var tempPath = req.files.file.path,
-        targetPath = path.resolve('./uploads/image.png');
-    if (path.extname(req.files.file.name).toLowerCase() === '.png') {
-        fs.rename(tempPath, targetPath, function(err) {
-            //if (err) throw err;
-            console.log("Upload completed!");
-        });
-    } else {
-        fs.unlink(tempPath, function () {
-            //if (err) throw err;
-            console.error("Only .png files are allowed!");
-        });
-    }
-});*/
-function upload_file() 
-{
-	return function(req, res) 
-	{
-  		req.setBodyEncoding('binary');
-  		var stream = new multipart.Stream(req);
-  		req.redirect('back');
-    };
-};
-
 
 server = http.createServer(app).listen(config.get('port'), function(homepage)
 {
@@ -74,12 +48,24 @@ server = http.createServer(app).listen(config.get('port'), function(homepage)
 	homepage = "http://"+this.address().address+":"+this.address().port;
 	console.log("homepage = "+homepage);
 });
+//SocketIOFileUploadServer.listen(server);
 
 var io = require('socket.io').listen(server);
 io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) 
 {
+	var delivery = dl.listen(socket);
+	  delivery.on('receive.success',function(file){
+
+	    fs.writeFile(file.name,file.buffer, function(err){
+	      if(err){
+	        console.log('File could not be saved.');
+	      }else{
+	        console.log('File saved.');
+	      };
+	    });
+	  });
 	socket.on('newOrder', function (msg) 
 	{
 		routes.addOrder(db,msg.contact_name,msg.contact_mail,msg.contact_phone,

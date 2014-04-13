@@ -50,17 +50,33 @@ window.onclick = function(e,homepage)
 window.onload = function(e,homepage) 
 {
     socket = io.connect(homepage);
+    //instance.listenOnSubmit(document.getElementById("AddRType"), document.getElementById("imagen"));
+      socket.on('connect', function(){
+    var delivery = new Delivery(socket);
+
+    delivery.on('delivery.connect',function(delivery){
+      $("input[type=submit]").click(function(evt){
+        var file = $("input[type=file]")[0].files[0];
+        delivery.send(file);
+        evt.preventDefault();
+      });
+    });
+
+    delivery.on('send.success',function(fileUID){
+      console.log("file was successfully sent.");
+    });
+  });
     socket.on('delRTypeOk', function () 
     {
-        location.reload();
+        //location.reload();
     });
     socket.on('addRTypeOk', function () 
     {
-        location.reload();
+        //location.reload();
     });
     socket.on('editTypeOk', function () 
     {
-        location.reload();
+        //location.reload();
     });
     socket.on('ExistingAdress', function () 
     {
@@ -75,12 +91,15 @@ window.onload = function(e,homepage)
     })
     document.getElementById('AddRType').onclick = function(e,homepage) 
     {   
+        //var instance = new SocketIOFileUpload(socket);
         socket.emit('newRollersType',{
             name:document.getElementById('namen').value,
             adress:MakeAddress(document.getElementById('namen').value),
             description:document.getElementById('descriptionn').value
             });
-            $('#AddRoller').modal('hide');
+        //var instance = new SocketIOFileUpload(socket);
+        //instance.load(document.getElementById("imagen"));
+        $('#AddRoller').modal('hide');
     }
     document.getElementById('EditRType').onclick = function(e,homepage) 
     {   
