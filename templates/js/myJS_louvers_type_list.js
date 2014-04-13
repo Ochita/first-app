@@ -1,3 +1,5 @@
+var oldN="";
+
 String.prototype.replaceAll=function(find, replace_to){
     return this.replace(new RegExp(find, "g"), replace_to);
 };
@@ -49,11 +51,11 @@ window.onclick = function(e,homepage)
 window.onload = function(e,homepage) 
 {
     socket = io.connect(homepage);
-    socket.on('delLTypeOk', function () 
+    socket.on('delTypeOk', function () 
     {
         location.reload();
     });
-    socket.on('addLTypeOk', function () 
+    socket.on('addTypeOk', function () 
     {
         location.reload();
     });
@@ -69,27 +71,27 @@ window.onload = function(e,homepage)
     {
         document.getElementById('name').value=msg.name;
         document.getElementById('description').value=msg.description
-        document.getElementById('namen').value=msg.name;
+        oldN=msg.name;
         $('#EditLouver').modal('show');
     })
     document.getElementById('AddLType').onclick = function(e,homepage) 
     {   
         socket.emit('newLouversType',{
             name:document.getElementById('namen').value,
-            adress:MakeAddress(document.getElementById('namen').value,
-            description:document.getElementById('descriptionn').value)
+            adress:MakeAddress(document.getElementById('namen').value),
+            description:document.getElementById('descriptionn').value
             });
             $('#AddLouver').modal('hide');
     }
     document.getElementById('EditLType').onclick = function(e,homepage) 
     {   
         socket.emit('editLouversType',{
-            oldname:document.getElementById('namen').value,
+            oldname:oldN,
             name:document.getElementById('name').value,
-            adress:MakeAddress(document.getElementById('name').value,
-            description:document.getElementById('description').value)
+            adress:MakeAddress(document.getElementById('name').value),
+            description:document.getElementById('description').value
             });
-        document.getElementById('namen').value="";
+        oldN="";
         $('#EditLouver').modal('hide');
     }
 }

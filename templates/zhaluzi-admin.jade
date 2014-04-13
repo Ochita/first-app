@@ -42,49 +42,46 @@ block content
           p   
 
     a(href="#AddLouver" role="button" id="AddLouverType" class="AddLouver" data-toggle="modal") Добавить новый тип
-    //form(enctype="multipart/form-data" method="post" action="/upload")
-    form()
-      div(class="modal" id="AddLouver" tabindex="-1" role="dialog" aria-labelledby="AddLouverLabel" aria-hidden="true")
-        div(class="modal-dialog")
-          div(class="modal-content")
-            div(class="modal-header")
-              button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
-              h3(id="AddLouverLabel") Добавление типа
-            div(class="modal-body")
-              label Название типа:
-              br
-              input(id="namen" style="width: 377px;" type="text" name="name" value="" size="70")
-              br
-              //label Изображение
-              //br
-              //input(id="imagen" style="width: 377px;" type="file" name="image" value="" size="70")
-              //br
-              label Описание:
-              br
-              textarea(id="descriptionn" style="width: 377px;" name="description" rows="7" cols="86")
-            div(class="modal-footer")
-              button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
-              button(class="btn btn-primary" id='AddLType' href="#" type="submit") Отправить
+    div(class="modal" id="AddLouver" tabindex="-1" role="dialog" aria-labelledby="AddLouverLabel" aria-hidden="true")
+      div(class="modal-dialog")
+        div(class="modal-content")
+          div(class="modal-header")
+            button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
+            h3(id="AddLouverLabel") Добавление типа
+          div(class="modal-body")
+            label Название типа:
+            br
+            input(id="namen" style="width: 377px;" type="text" name="name" value="" size="70")
+            br
+            //label Изображение
+            //br
+            //input(id="imagen" style="width: 377px;" type="file" name="image" value="" size="70")
+            //br
+            label Описание:
+            br
+            textarea(id="descriptionn" style="width: 377px;" name="description" rows="7" cols="86")
+          div(class="modal-footer")
+            button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
+            button(class="btn btn-primary" id='AddLType' href="#" type="submit") Отправить
     //окно редактирования          
-    form()
-      div(class="modal" id="EditLouver" tabindex="-1" role="dialog" aria-labelledby="EditLouverLabel" aria-hidden="true")
-        div(class="modal-dialog")
-          div(class="modal-content")
-            div(class="modal-header")
-              button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
-              h3(id="EditLouverLabel") Редактирование типа
-            div(class="modal-body")
-              label Название типа:
-              br
-              input(id="name" style="width: 377px;" type="text" name="name" value="" size="70")
-              br
-              //label Изображение
-              //br
-              //input(id="image" style="width: 377px;" type="file" name="image" value="" size="70")
-              //br
-              label Описание:
-              br
-              textarea(id="description" style="width: 377px;" name="description" rows="7" cols="86")
-            div(class="modal-footer")
-              button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
-              button(class="btn btn-primary" id='EditLType' href="#" type="submit") Отправить
+    div(class="modal" id="EditLouver" tabindex="-1" role="dialog" aria-labelledby="EditLouverLabel" aria-hidden="true")
+      div(class="modal-dialog")
+        div(class="modal-content")
+          div(class="modal-header")
+            button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
+            h3(id="EditLouverLabel") Редактирование типа
+          div(class="modal-body")
+            label Название типа:
+            br
+            input(id="name" style="width: 377px;" type="text" name="name" value="" size="70")
+            br
+            //label Изображение
+            //br
+            //input(id="image" style="width: 377px;" type="file" name="image" value="" size="70")
+            //br
+            label Описание:
+            br
+            textarea(id="description" style="width: 377px;" name="description" rows="7" cols="86")
+          div(class="modal-footer")
+            button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
+            button(class="btn btn-primary" id='EditLType' href="#" type="submit") Отправить

@@ -1,3 +1,5 @@
+var oldN="";
+
 String.prototype.replaceAll=function(find, replace_to){
     return this.replace(new RegExp(find, "g"), replace_to);
 };
@@ -51,7 +53,7 @@ window.onload = function(e,homepage)
 {
     socket = io.connect(homepage);
     //instance.listenOnSubmit(document.getElementById("AddRType"), document.getElementById("imagen"));
-      socket.on('connect', function(){
+    /*  socket.on('connect', function(){
     var delivery = new Delivery(socket);
 
     delivery.on('delivery.connect',function(delivery){
@@ -65,18 +67,18 @@ window.onload = function(e,homepage)
     delivery.on('send.success',function(fileUID){
       console.log("file was successfully sent.");
     });
-  });
-    socket.on('delRTypeOk', function () 
+  });*/
+    socket.on('delTypeOk', function () 
     {
-        //location.reload();
+        location.reload();
     });
-    socket.on('addRTypeOk', function () 
+    socket.on('addTypeOk', function () 
     {
-        //location.reload();
+        location.reload();
     });
     socket.on('editTypeOk', function () 
     {
-        //location.reload();
+        location.reload();
     });
     socket.on('ExistingAdress', function () 
     {
@@ -86,9 +88,9 @@ window.onload = function(e,homepage)
     {
         document.getElementById('name').value=msg.name;
         document.getElementById('description').value=msg.description
-        document.getElementById('namen').value=msg.name;
+        oldN=msg.name;
         $('#EditRoller').modal('show');
-    })
+    });
     document.getElementById('AddRType').onclick = function(e,homepage) 
     {   
         //var instance = new SocketIOFileUpload(socket);
@@ -100,16 +102,16 @@ window.onload = function(e,homepage)
         //var instance = new SocketIOFileUpload(socket);
         //instance.load(document.getElementById("imagen"));
         $('#AddRoller').modal('hide');
-    }
+    };
     document.getElementById('EditRType').onclick = function(e,homepage) 
     {   
         socket.emit('editRollersType',{
-            oldname:document.getElementById('namen').value,
+            oldname:oldN,
             name:document.getElementById('name').value,
             adress:MakeAddress(document.getElementById('name').value),
-            description:document.getElementById('description').value.replaceAll
+            description:document.getElementById('description').value
             });
-        document.getElementById('namen').value="";
+        oldN="";
         $('#EditRoller').modal('hide');
     }
 }

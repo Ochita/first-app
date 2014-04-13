@@ -1,11 +1,11 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
-var fs = require('fs');
+//var fs = require('fs');
 var config = require('config');
 //var ejs = require('ejs');
 var routes = require('./routes');
-var dl = require('delivery');
+//var dl = require('delivery');
 //var multipart = require('multipart');
 //var sys = require('sys');
 //var SocketIOFileUploadServer = require("socketio-file-upload");
@@ -21,8 +21,8 @@ var app = express();
 app.set('views',__dirname+'/templates');
 app.set('view engine','jade');	//!!!!!JADE
 
-//app.use(express.urlencoded());// то, что стало вместо bodyParser
-app.use(express.bodyParser({uploadDir:'./templates/img'}));
+app.use(express.urlencoded());// то, что стало вместо bodyParser
+//app.use(express.bodyParser({uploadDir:'./templates/img'}));
 app.use(express.cookieParser());
 //app.use(express.session());
 app.use(app.router);
@@ -55,7 +55,7 @@ io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) 
 {
-	var delivery = dl.listen(socket);
+	/*var delivery = dl.listen(socket);
 	  delivery.on('receive.success',function(file){
 
 	    fs.writeFile(file.name,file.buffer, function(err){
@@ -65,7 +65,7 @@ io.sockets.on('connection', function (socket)
 	        console.log('File saved.');
 	      };
 	    });
-	  });
+	  });*/
 	socket.on('newOrder', function (msg) 
 	{
 		routes.addOrder(db,msg.contact_name,msg.contact_mail,msg.contact_phone,
@@ -73,11 +73,19 @@ io.sockets.on('connection', function (socket)
 	});
 	socket.on('newLouversType',function(msg)
 	{
-		routes.addLType(db,msg.name,msg.adress,msg.description,socket);
+		routes.addType(db,'louvers_type',msg.name,msg.adress,msg.description,socket);
 	});
 	socket.on('newRollersType',function(msg)
 	{
-		routes.addRType(db,msg.name,msg.adress,msg.description,socket);
+		routes.addType(db,'rollers_type',msg.name,msg.adress,msg.description,socket);
+	});
+	socket.on('newRollers',function(msg)
+	{
+		routes.addRoller(db,msg,socket);
+	});
+	socket.on('newLouvers',function(msg)
+	{
+		routes.addLouver(db,msg,socket);
 	});
 	socket.on('deleteOrder', function (msg,error) 
 	{
@@ -87,12 +95,22 @@ io.sockets.on('connection', function (socket)
 	socket.on('deleteLouverType', function (msg,error) 
 	{
 		routes.delType(db,'louvers_type',msg.type_id,error);
-		if(!error) socket.emit('delLTypeOk');		//пока что без проверок на правильность удаления
+		if(!error) socket.emit('delTypeOk');		//пока что без проверок на правильность удаления
 	});
 	socket.on('deleteRollerType', function (msg,error) 
 	{
 		routes.delType(db,'rollers_type',msg.type_id,error);
-		if(!error) socket.emit('delRTypeOk');		//пока что без проверок на правильность удаления
+		if(!error) socket.emit('delTypeOk');		//пока что без проверок на правильность удаления
+	});
+	socket.on('deleteRollers', function (msg,error) 
+	{
+		routes.delType(db,'rollers',msg.type_id,error);
+		if(!error) socket.emit('delSortOk');		//пока что без проверок на правильность удаления
+	});
+	socket.on('deleteLouvers', function (msg,error) 
+	{
+		routes.delType(db,'louvers',msg.type_id,error);
+		if(!error) socket.emit('delSortOk');		//пока что без проверок на правильность удаления
 	});
 	socket.on('getLTypeInfo',function (msg)
 	{
@@ -109,6 +127,25 @@ io.sockets.on('connection', function (socket)
 	socket.on('editRollersType',function (msg)
 	{
 		routes.editType(db,'rollers_type',msg.oldname,msg.name,msg.adress,msg.description,socket);
+		socket.emit('editTypeOk');	
+	});
+	socket.on('getRInfo',function (msg)
+	{
+		routes.sendRInfo(db,'rollers',msg.item_id,socket);
+	})
+	socket.on('editRollers',function (msg)
+	{
+		routes.editRollers(db,'rollers',msg,socket);
+		socket.emit('editSortOk');
+	});
+	socket.on('getLInfo',function (msg)
+	{
+		routes.sendLInfo(db,'louvers',msg.item_id,socket);
+	})
+	socket.on('editLouvers',function (msg)
+	{
+		routes.editLouvers(db,'louvers',msg,socket);
+		socket.emit('editSortOk');
 	});
 });
 

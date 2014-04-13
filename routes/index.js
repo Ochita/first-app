@@ -117,49 +117,31 @@ exports.addOrder = function(db,name,mail,phone,address,data,comment,error)   //Ð
     });*/
 }
 
-exports.addLType = function(db,name,adress,description,socket)   
+//editLouvers(db,'louvers',msg,socket);sendLInfo
+
+exports.addRoller = function(db,msg,socket)
 {
-    var error = false;
-    var collection = db.get('louvers_type');
-    var documents = {name:name,adress:adress,description:description};
-    collection.find({adress:adress},{},function(e,docs)
-    {
-        if (docs.length!=0) error = true;
-        //console.log("finding docs:");console.log(docs);console.log("after find: "+error);
-        if (error!=true)
-        {   
-            collection.insert(documents,{},function(e,docs)
-            {   
-                error = e;
-            });
-        }
-        else socket.emit('ExistingAdress');
-        if(error==false) socket.emit('addLTypeOk');
+    var collection = db.get('rollers');
+    var documents = {name:msg.name,type_roller:msg.type_roller,type_global:msg.type_global,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
+    collection.insert(documents,{},function(e,docs)
+    {   
+        if (e) socket.emit('ExistingAdress');
+        if (!e) socket.emit('addSortOk');
     });
 }
 
-exports.addRType = function(db,name,adress,description,socket)   
+exports.addLouver = function(db,msg,socket)
 {
-    var error = false;
-    var collection = db.get('rollers_type');
-    var documents = {name:name,adress:adress,description:description};
-    collection.find({adress:adress},{},function(e,docs)
-    {
-        if (docs.length!=0) error = true;
-        //console.log("finding docs:");console.log(docs);console.log("after find: "+error);
-        if (error!=true)
-        {   
-            collection.insert(documents,{},function(e,docs)
-            {   
-                error = e;
-            });
-        }
-        if(error==false) socket.emit('addRTypeOk');
-        if(error==true) socket.emit('ExistingAdress');
+    var collection = db.get('louvers');
+    var documents = {name:msg.name,type:msg.type,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
+    collection.insert(documents,{},function(e,docs)
+    {   
+        if (e) socket.emit('ExistingAdress');
+        if (!e) socket.emit('addSortOk');
     });
 }
 
-exports.editType = function(db,cl_name,oldname,name,adress,description,socket)
+exports.addType = function(db,cl_name,name,adress,description,socket)   
 {
     var error = false;
     var collection = db.get(cl_name);
@@ -170,13 +152,52 @@ exports.editType = function(db,cl_name,oldname,name,adress,description,socket)
         //console.log("finding docs:");console.log(docs);console.log("after find: "+error);
         if (error!=true)
         {   
-            collection.update({name:oldname},{$set:documents},function(e,docs)
+            collection.insert(documents,{},function(e,docs)
             {   
                 error = e;
             });
         }
-        if(error==false) socket.emit('editTypeOk');
+        if(error==false) socket.emit('addTypeOk');
         if(error==true) socket.emit('ExistingAdress');
+    });
+}
+
+exports.editType = function(db,cl_name,oldname,name,adress,description,socket)
+{
+    var error = false;
+    var collection = db.get(cl_name);
+    var documents = {name:name,adress:adress,description:description};
+    collection.update({name:oldname},{$set:documents},function(e,docs)
+    {   
+        error = e;
+        if(error==false) socket.emit('editTypeOk');
+        if(error==true) socket.emit('Error');
+    });
+}
+
+exports.editRollers = function(db,cl_name,msg,socket)
+{
+    var error = false;
+    var collection = db.get(cl_name);
+    var documents = {name:msg.name,type_roller:msg.type_roller,type_global:msg.type_global,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
+    collection.update({name:msg.oldname},{$set:documents},function(e,docs)
+    {   
+        error = e;
+        if(error==false) socket.emit('editSortOk');
+        if(error==true) socket.emit('Error');
+    });
+}
+
+exports.editLouvers = function(db,cl_name,msg,socket)
+{
+    var error = false;
+    var collection = db.get(cl_name);
+    var documents = {name:msg.name,type:msg.type,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
+    collection.update({name:msg.oldname},{$set:documents},function(e,docs)
+    {   
+        error = e;
+        if(error==false) socket.emit('editSortOk');
+        if(error==true) socket.emit('Error');
     });
 }
 
@@ -200,5 +221,23 @@ exports.sendInfo=function(db,cl_name,id,socket)
     collection.find({_id:id},{},function(e,docs)
     {
         socket.emit('helloInfo',{name:docs[0].name,description:docs[0].description});
+    });
+}
+
+exports.sendRInfo=function(db,cl_name,id,socket)
+{
+    var collection = db.get(cl_name);
+    collection.find({_id:id},{},function(e,docs)
+    {
+        socket.emit('helloInfo',{name:docs[0].name,type_roller:docs[0].type_roller,type_global:docs[0].type_global,calc_price:docs[0].calc_price,promo_price:docs[0].promo_price,description:docs[0].description});
+    });
+}
+
+exports.sendLInfo=function(db,cl_name,id,socket)
+{
+    var collection = db.get(cl_name);
+    collection.find({_id:id},{},function(e,docs)
+    {
+        socket.emit('helloInfo',{name:docs[0].name,type:docs[0].type,calc_price:docs[0].calc_price,promo_price:docs[0].promo_price,description:docs[0].description});
     });
 }

@@ -15,7 +15,7 @@ cd ~/projects/node-tutorial/first-app/
 node app
 
 git add .
-git ci -m "initial_commit_5"
+git ci -m "initial_commit_6"
 git push -u origin master
 #kartachena
 #jane1892
