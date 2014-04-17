@@ -1,7 +1,7 @@
 extends layout_admin
 
 block content
-    script(src='#{homepage}/js/myJS_orderlist.js')
+  div(class="bs-component")
     div(class="navbar navbar-default")
       div(class="navbar-inner")
         a(class="brand" href="#">Имя проекта)
@@ -26,19 +26,15 @@ block content
                 a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставней
               li
                 a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставней
-          li
-            a(href="#{homepage}/admin/images") Изображения                
           li(class="active")
+            a(href="#{homepage}/admin/images") Изображения
+          li
             a(href="#{homepage}/admin/orders") Заявки
           li
             a(href="#") Контакты
           li
-            a(href="#{homepage}/logout") Выход                 
-    ul
-      each order, i in orderlist
-        li
-          p=("ID заявки: "+order._id+" , дата: "+order.order_data) 
-          p=("От: "+order.name+", "+order.mail+", "+order.phone+", "+order.address)
-          p!=("Комментарий: <br>"+order.comment)
-          a(href="#" id="delete_#{order._id}" class="delete_order") удалить заявку
-          p 
+            a(href="#{homepage}/logout") Выход 
+  form.form-horizontal(action="/admin/upload_#{imgname}" enctype="multipart/form-data" method="post")
+      h1 Загрузка изображения
+      input(type="file" name="upload" multiple="multiple")          
+      input(type="submit" value="Загрузить")

@@ -22,7 +22,7 @@ window.onload = function()
                 contact_phone:document.getElementById('contact_phone').value,
                 contact_address:str,
                 contact_data:now,
-                contact_message:document.getElementById('contact_message').value.replaceAll("\n","<br>")
+                contact_message:document.getElementById('contact_message').value
                 });
                 //document.getElementById('myModal').hide;
                 $('#myModal').modal('hide');

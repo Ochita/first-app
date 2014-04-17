@@ -1,14 +1,12 @@
 var express = require('express');
 var http = require('http');
 var path = require('path');
-//var fs = require('fs');
+var fs = require('fs');
 var config = require('config');
-//var ejs = require('ejs');
 var routes = require('./routes');
-//var dl = require('delivery');
-//var multipart = require('multipart');
-//var sys = require('sys');
-//var SocketIOFileUploadServer = require("socketio-file-upload");
+var hash = require('./pass').hash; 
+var formidable = require('formidable');
+var util = require('util');
 
 //MONGODB
 var mongo = require('mongodb');
@@ -23,9 +21,87 @@ app.set('view engine','jade');	//!!!!!JADE
 
 app.use(express.urlencoded());// то, что стало вместо bodyParser
 //app.use(express.bodyParser({uploadDir:'./templates/img'}));
-app.use(express.cookieParser());
-//app.use(express.session());
-app.use(app.router);
+app.use(express.cookieParser('shhhh, very secret')); 
+app.use(express.session());
+//app.use(app.router);
+
+//авторизация
+app.use(function(req, res, next)
+{
+  var err = req.session.error
+    , msg = req.session.success;
+  delete req.session.error;
+  delete req.session.success;
+  res.locals.message = '';
+  if (err) res.locals.message = '<p class="msg error">' + err + '</p>';
+  if (msg) res.locals.message = '<p class="msg success">' + msg + '</p>';
+  next();
+});     
+
+var users = {Thor:{name:'Thor'}};
+hash('111', function(err, salt, hash)
+{
+  if (err) throw err;
+  // store the salt & hash in the "db"
+  users.Thor.salt = salt;
+  users.Thor.hash = hash.toString();
+});
+
+function authenticate(name, pass, fn) 
+{
+  if (!module.parent) console.log('authenticating %s:%s', name, pass);
+  var user = users[name];
+  // query the db for the given username
+  if (!user) return fn(new Error('cannot find user'));
+  // apply the same algorithm to the POSTed password, applying the hash against the pass / salt, if there is a match we found the user
+  hash(pass, user.salt, function(err, hash)
+  {
+    if (err) return fn(err);
+    if (hash.toString() == user.hash) return fn(null, user);
+    fn(new Error('invalid password'));
+  })
+};
+
+function restrict(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    req.session.error = 'Access denied!';
+    res.redirect('/login');
+  }
+}
+
+app.get('/logout', function(req, res){
+  req.session.destroy(function(){
+    res.redirect('/');
+  });
+});
+
+app.post('/login', function(req, res)
+{
+  authenticate(req.body.username, req.body.password, function(err, user)
+  {
+    if (user) 
+    {
+      // Regenerate session when signing in to prevent fixation
+      req.session.regenerate(function()
+      {
+        // Store the user's primary key in the session store to be retrieved, or in this case the entire user object
+        req.session.user = user;
+        req.session.success = 'Authenticated as ' + user.name + ' click to <a href="/logout">logout</a>. You may now access <a href="/admin">/admin</a>.';
+        console.log('мы попали в регенерацию.')
+        res.redirect('/admin');
+      });
+    } 
+    else 
+    {
+    	console.log("мы не попали в регенерацию")
+      req.session.error = 'Authentication failed, please check your  username and password.';
+      res.redirect('login');
+    }
+  });
+});     
+//end!
 
 app.use("/styles", express.static(__dirname + '/templates/stylesheets'));
 app.use("/images",express.static(__dirname+'/templates/img'));
@@ -33,12 +109,37 @@ app.use("/js",express.static(__dirname+'/templates/js'));
 app.use("/modules",express.static(__dirname+'/node_modules/'));
 
 app.get('/', routes.tohome(db,homepage));
-app.get('/admin',routes.adminka(db,homepage));
-app.get('/admin/zhaluzi-types',routes.admin_zhaluzi(db,homepage));
-app.get('/admin/zhaluzi-positions',routes.admin_louvers(db,homepage));
-app.get('/admin/rollers-types',routes.admin_rollers(db,homepage));
-app.get('/admin/rollers-positions',routes.admin_rollers0(db,homepage));
-app.get('/admin/orders',routes.admin_orders(db,homepage));
+app.get('/admin', restrict, routes.adminka(db,homepage));
+app.get('/admin/zhaluzi-types', restrict,routes.admin_zhaluzi(db,homepage));
+app.get('/admin/zhaluzi-positions', restrict,routes.admin_louvers(db,homepage));
+app.get('/admin/rollers-types', restrict,routes.admin_rollers(db,homepage));
+app.get('/admin/rollers-positions', restrict,routes.admin_rollers0(db,homepage));
+app.get('/admin/orders', restrict,routes.admin_orders(db,homepage));
+app.get('/admin/images', restrict,routes.admin_images(db,homepage));
+app.get('/login',routes.toCMS(db,homepage));
+
+app.get('/admin/load_:image',restrict,routes.load_image(db,homepage));
+app.post('/admin/upload_:image',restrict, function(req, res)
+{
+	var name = req.params.image+'.jpg';
+	console.log(name);
+	var form = new formidable.IncomingForm({ uploadDir:__dirname+'/templates/img/catalog'});
+	form.on('end', function() {
+            console.log('-> upload done');
+        });
+	form.on('file', function(field, file) {
+		//console.log('file');
+            //rename the incoming file to the file's name
+                fs.rename(file.path, form.uploadDir + "/" + name);
+        })
+	form.parse(req, function(err, fields, files) 
+	{
+      //res.writeHead(200, {'content-type': 'text/html'});
+      //res.end('<a href="/admin/images"> back</a>');
+    	res.redirect(homepage+'/admin/images');
+    });
+    //res.redirect('/admin/images');
+});
 
 app.use(express.static(path.join(__dirname,'../public')));	//я не знаю, что это и зачем, надо будет погуглить
 
@@ -48,24 +149,12 @@ server = http.createServer(app).listen(config.get('port'), function(homepage)
 	homepage = "http://"+this.address().address+":"+this.address().port;
 	console.log("homepage = "+homepage);
 });
-//SocketIOFileUploadServer.listen(server);
 
 var io = require('socket.io').listen(server);
 io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) 
 {
-	/*var delivery = dl.listen(socket);
-	  delivery.on('receive.success',function(file){
-
-	    fs.writeFile(file.name,file.buffer, function(err){
-	      if(err){
-	        console.log('File could not be saved.');
-	      }else{
-	        console.log('File saved.');
-	      };
-	    });
-	  });*/
 	socket.on('newOrder', function (msg) 
 	{
 		routes.addOrder(db,msg.contact_name,msg.contact_mail,msg.contact_phone,

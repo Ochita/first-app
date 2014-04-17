@@ -1,7 +1,7 @@
 extends layout_admin
 
 block content
-    script(src='#{homepage}/js/myJS_orderlist.js')
+  div(class="bs-component")
     div(class="navbar navbar-default")
       div(class="navbar-inner")
         a(class="brand" href="#">Имя проекта)
@@ -26,19 +26,33 @@ block content
                 a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставней
               li
                 a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставней
-          li
-            a(href="#{homepage}/admin/images") Изображения                
           li(class="active")
+            a(href="#{homepage}/admin/images") Изображения
+          li
             a(href="#{homepage}/admin/orders") Заявки
           li
             a(href="#") Контакты
           li
-            a(href="#{homepage}/logout") Выход                 
-    ul
-      each order, i in orderlist
-        li
-          p=("ID заявки: "+order._id+" , дата: "+order.order_data) 
-          p=("От: "+order.name+", "+order.mail+", "+order.phone+", "+order.address)
-          p!=("Комментарий: <br>"+order.comment)
-          a(href="#" id="delete_#{order._id}" class="delete_order") удалить заявку
-          p 
+            a(href="#{homepage}/logout") Выход 
+  div
+  table
+    thead
+      tr: th Жалюзи
+    tbody
+      each louver, i in louverslist
+        tr
+          td 
+            p=louver.name
+          td
+          td
+            image(src='#{homepage}/images/catalog/img_l#{louver._id}_1.jpg' style="width:200px; height:120px; margin: 0 auto")
+            br
+            a(href="#{homepage}/admin/load_img_l#{louver._id}_1") изменить изображение 1
+          td
+            image(src='#{homepage}/images/catalog/img_l#{louver._id}_2.jpg' style="width:200px; height:120px; margin: 0 auto")
+            br
+            a(href="#{homepage}/admin/load_img_l#{louver._id}_2") изменить изображение 2
+          td
+            image(src='#{homepage}/images/catalog/img_l#{louver._id}_3.jpg' style="width:200px; height:120px; margin: 0 auto")
+            br
+            a(href="#{homepage}/admin/load_img_l#{louver._id}_3") изменить изображение 3

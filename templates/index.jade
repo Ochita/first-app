@@ -1,6 +1,7 @@
 extends layout
 
 block content
+    script(src='#{homepage}/js/myJS.js')
     div(class="bs-component")
       div(class="navbar navbar-default")
         div(class="navbar-inner")
@@ -44,9 +45,11 @@ block content
     //form(method="post" enctype="multipart/form-data" action="/upload")
     //  input(type="file" name="file")
     //  input(type="submit" value="Submit")
-    button.btn Калькулятор
-    button.btn Конструктор
-    button(href="#myModal" role="button" class="btn" data-toggle="modal") Вызов замерщика
+    div(align="center")
+      button.btn Калькулятор жазюзи
+      button.btn Калькулятор рольставен
+      button.btn Конструктор
+      button(href="#myModal" role="button" class="btn" data-toggle="modal") Вызов замерщика
 
     div(class="bs-component")
       div(class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")

@@ -1,7 +1,9 @@
-
-/*
- * GET home page.
- */
+String.prototype.replaceAll=function(find, replace_to){
+    return this.replace(new RegExp(find, "g"), replace_to);
+};
+String.prototype.stripTags = function() {
+  return this.replace(/<\/?[^>]+>/g, '');
+};
 
 exports.index = function(req, res){
   res.render('index', { title: 'Express' });
@@ -17,6 +19,55 @@ exports.tohome = function(db,homepage)
             collection.find({},{},function(e,docs){
             res.render('index', {
                 "louverslist" : docsl, "rollerslist":docs, title: 'Жалюзи и рольставни', "homepage": homepage
+            });
+        });
+    });
+    };
+};
+
+exports.toCMS = function(db,homepage) 
+{
+    return function(req, res) {
+        var collection = db.get('louvers_type');
+        collection.find({},{},function(e,docs){
+            docsl = docs;
+            collection = db.get('rollers_type');
+            collection.find({},{},function(e,docs){
+            res.render('login', {
+                "louverslist" : docsl, "rollerslist":docs, title: 'Вход в CMS', "homepage": homepage
+            });
+        });
+    });
+    };
+};
+
+exports.load_image = function(db,homepage) 
+{
+    return function(req, res) {
+    var imgname = req.params.image;
+    /*res.writeHead(200, {'content-type': 'text/html'});
+  res.end(
+    '<form action="/admin/upload_'+imgname+'" enctype="multipart/form-data" method="post">'+
+    '<input type="file" name="upload" multiple="multiple"><br>'+
+    '<input type="submit" value="Upload">'+
+    '</form>'
+  );*/
+    res.render('load_image',{
+            "homepage": homepage, "imgname": imgname
+    });
+}
+}
+
+exports.admin_images = function(db,homepage) 
+{
+    return function(req, res) {
+        var collection = db.get('louvers');
+        collection.find({},{},function(e,docs){
+            docsl = docs;
+            collection = db.get('rollers');
+            collection.find({},{},function(e,docs){
+            res.render('imagelist', {
+                "louverslist" : docsl, "rollerslist":docs, title: 'Картинки,отображаемые в каталоге', "homepage": homepage
             });
         });
     });
@@ -110,6 +161,9 @@ exports.admin_orders = function(db,homepage)
 exports.addOrder = function(db,name,mail,phone,address,data,comment,error)   //пока без комментария, ибо хз, что с большим текстом делать.
 {
     var collection = db.get('orders');
+    comment = comment.stripTags();
+    comment = comment.stripTags();
+    comment = comment.replaceAll("\n","<br>");
     collection.insert({name:name,mail:mail,phone:phone,address:address,order_data:data,comment:comment});
     /*collection.find({},{},function(e,docs)
     {
