@@ -1,0 +1,41 @@
+extends layout
+
+block content
+    script.
+      document.getElementById('rt').className+=" active"
+
+    table(style="width:100%")
+      col(width="75%")
+      col(width="25%")
+      tr
+        td(valign="top")
+          p=typename
+          div(align="center")
+            image(src='#{homepage}/images/catalog/img_rt#{id}.jpg' style="width:80%;" class="thumbnail")
+          ul
+            each roller,i in itemslist
+              li
+                p=(roller.name+"   -     от "+roller.promo_price+" руб.")
+                div(align="center")
+                  a(href="#{homepage}/images/catalog/img_r#{roller._id}.jpg" class="thumbnail" target="_blank" style="width:120px; height:130px; margin: 0 auto")
+                    image(src='#{homepage}/images/catalog/img_r#{roller._id}.jpg' style="width:120px; height:120px; margin: 0 auto")
+                p=roller.description
+          p!=text
+        td(valign="top")
+          ul(class="nav nav-pills nav-stacked" style="max-width: 300px;")
+            li
+              a(href="#{homepage}") Главная
+            li(class="divider")
+            li
+              a(href="#{homepage}/aboutCompany") О компании
+            li(class="divider")
+            each louver, i in louverslist
+              li
+                a(href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
+            li(class="divider")
+            each roller, i in rollerslist
+              li
+                a(href="#{homepage}/rolstavni/#{roller.adress}")= roller.name
+            li(class="divider")
+            li
+              a(href="#{homepage}/contacts") Контакты

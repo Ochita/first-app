@@ -9,4 +9,32 @@ html
     script(src='#{homepage}/js/jquery.js')
     script(src='#{homepage}/js/bootstrap.min.js')
     script(src="#{homepage}/socket.io/socket.io.js")
+    div(class="bs-component")
+      div(class="navbar navbar-default")
+        div(class="navbar-inner")
+          a(class="brand" href="#">Имя проекта)
+          ul(class="nav navbar-nav")
+            li(id="gl")
+              a(href="#{homepage}") Главная
+            li(id="acmp")
+              a(href="#{homepage}/aboutCompany") О компании
+            li(class="dropdown" id="lt")
+              a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
+                b(class="caret")
+              ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+                each louver, i in louverslist
+                  li
+                    a(tabindex="-1" href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
+            li(class="dropdown" id="rt")
+              a(id="drop2" href="#" class="dropdown-toggle" data-toggle="dropdown") Рольставни
+                b(class="caret")
+              ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+                each roller, i in rollerslist
+                  li
+                    a(tabindex="-1" href="#{homepage}/rolstavni/#{roller.adress}")= roller.name
+            li(id="cts")
+              a(href="#{homepage}/contacts") Контакты
+            li
+              a(href="#{homepage}/admin/") adminka
+    br
     block content

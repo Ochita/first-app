@@ -1,34 +1,6 @@
 extend layout
 
-block content
-    div(class="bs-component")
-      div(class="navbar navbar-default")
-        div(class="navbar-inner")
-          a(class="brand" href="#">Имя проекта)
-          ul(class="nav navbar-nav")
-            li(class="active")
-              a(href="#{homepage}") Главная
-            li
-              a(href="#") О компании
-            li(class="dropdown")
-              a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
-                b(class="caret")
-              ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
-                each louver, i in louverslist
-                  li
-                    a(tabindex="-1" href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
-            li(class="dropdown")
-              a(id="drop2" href="#" class="dropdown-toggle" data-toggle="dropdown") Рольставни
-                b(class="caret")
-              ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
-                each roller, i in rollerslist
-                  li
-                    a(tabindex="-1" href="#{homepage}/rolstavni/#{roller.adress}")= roller.name
-            li
-              a(href="#") Контакты
-            li
-              a(href="#{homepage}/admin/") adminka
-    br          
+block content    
     form.form-horizontal(method="post" action="/login" align="center")
         h1 Вход в CMS
         input(type="text" name="username" id="input_username" placeholder="login")

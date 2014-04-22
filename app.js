@@ -89,13 +89,11 @@ app.post('/login', function(req, res)
         // Store the user's primary key in the session store to be retrieved, or in this case the entire user object
         req.session.user = user;
         req.session.success = 'Authenticated as ' + user.name + ' click to <a href="/logout">logout</a>. You may now access <a href="/admin">/admin</a>.';
-        console.log('мы попали в регенерацию.')
         res.redirect('/admin');
       });
     } 
     else 
     {
-    	console.log("мы не попали в регенерацию")
       req.session.error = 'Authentication failed, please check your  username and password.';
       res.redirect('login');
     }
@@ -109,6 +107,11 @@ app.use("/js",express.static(__dirname+'/templates/js'));
 app.use("/modules",express.static(__dirname+'/node_modules/'));
 
 app.get('/', routes.tohome(db,homepage));
+app.get('/zhaluzi/:lname', routes.itemslist(db,homepage,"louverslist","louvers"));
+app.get('/rolstavni/:lname', routes.itemslist(db,homepage,"rollerslist","rollers"));
+app.get('/aboutCompany',routes.aboutCMP(db,homepage));
+app.get('/contacts',routes.contacts(db,homepage));
+
 app.get('/admin', restrict, routes.adminka(db,homepage));
 app.get('/admin/zhaluzi-types', restrict,routes.admin_zhaluzi(db,homepage));
 app.get('/admin/zhaluzi-positions', restrict,routes.admin_louvers(db,homepage));

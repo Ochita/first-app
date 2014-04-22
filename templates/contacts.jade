@@ -1,0 +1,44 @@
+extends layout
+
+block content
+    script.
+      document.getElementById('cts').className+=" active"
+
+    table(style="width:100%")
+      col(width="75%")
+      col(width="25%")
+      tr
+        td(valign="top")
+          p Контакты
+          div(align="center")   
+            image(src='#{homepage}/images/card.png' style="width:80%;" class="thumbnail")
+          p
+            b Адрес:
+            p=contacts.address
+          p
+            b Телефон:
+            p=contacts.phone
+          p
+            b E-mail:
+            p=contacts.email
+          p
+            b График работы:
+            p=contacts.graph
+        td(valign="top")
+          ul(class="nav nav-pills nav-stacked" style="max-width: 300px;")
+            li
+              a(href="#{homepage}") Главная
+            li(class="divider")
+            li
+              a(href="#{homepage}/aboutCompany") О компании
+            li(class="divider")
+            each louver, i in louverslist
+              li
+                a(href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
+            li(class="divider")
+            each roller, i in rollerslist
+              li
+                a(href="#{homepage}/rolstavni/#{roller.adress}")= roller.name
+            li(class="divider")
+            li
+              a(href="#{homepage}/contacts") Контакты

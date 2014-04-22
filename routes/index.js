@@ -25,6 +25,99 @@ exports.tohome = function(db,homepage)
     };
 };
 
+exports.aboutCMP = function(db,homepage) 
+{
+    return function(req, res) {
+        var collection = db.get('louvers_type');
+        collection.find({},{},function(e,docs){
+            docsl = docs;
+            collection = db.get('rollers_type');
+            collection.find({},{},function(e,docs){
+                docsl2=docs;
+                collection = db.get('information');
+                collection.find({name:"companyInfo"},{},function(e,docs){
+                    if (docs.length!=0)
+                    res.render('aboutCompany', {    //теги не удаляю. мало ли.
+                        "louverslist" : docsl, "rollerslist":docsl2, title: 'Жалюзи и рольставни', 
+                        "homepage": homepage, "text":(docs[0].text).replaceAll("\n","<br>")});
+        });
+            });
+    });
+    };
+};
+
+exports.contacts = function(db,homepage) 
+{
+    return function(req, res) {
+        var collection = db.get('louvers_type');
+        collection.find({},{},function(e,docs){
+            docsl = docs;
+            collection = db.get('rollers_type');
+            collection.find({},{},function(e,docs){
+                docsl2=docs;
+                collection = db.get('information');
+                collection.find({name:"contacts"},{},function(e,docs){
+                    if (docs.length!=0)
+                    res.render('contacts', {    //теги не удаляю. мало ли.
+                        "louverslist" : docsl, "rollerslist":docsl2, title: 'Жалюзи и рольставни', 
+                        "homepage": homepage, contacts:docs[0]});
+        });
+            });
+    });
+    };
+};
+
+exports.itemslist=function(db,homepage,jadefile,itemcl)
+{
+    return function(req,res)
+    {
+        var lname = req.params.lname;
+        var collection = db.get('louvers_type');
+        collection.find({},{},function(e,docs)
+        {
+            docsl = docs;
+            collection = db.get('rollers_type');
+            collection.find({},{},function(e,docs)
+            {
+                docsl2 = docs;
+                collection = db.get(itemcl+'_type');
+                collection.find({adress:lname},{},function(e,docs)
+                {
+                    if (docs.length!=0)
+                    {
+                        typename=docs[0].name;
+                        text=docs[0].description;
+                        text = text.stripTags();
+                        text = text.replaceAll("\n","<br>");
+                        id=docs[0]._id;
+                        collection = db.get(itemcl);
+                        if (itemcl=="rollers") 
+                        collection.find({type_roller:typename},{},function(e,docs)
+                        {
+                            res.render(jadefile, {
+                            "louverslist" : docsl, 
+                            "rollerslist":docsl2, title: 'Жалюзи и рольставни', 
+                            "homepage": homepage,
+                            "typename":typename, "id":id, "text":text, 
+                            "itemslist":docs});
+                        });
+                        else
+                        collection.find({type:typename},{},function(e,docs)
+                        {
+                            res.render(jadefile, {
+                            "louverslist" : docsl, 
+                            "rollerslist":docsl2, title: 'Жалюзи и рольставни', 
+                            "homepage": homepage,
+                            "typename":typename, "id":id, "text":text, 
+                            "itemslist":docs});
+                        });
+                    }
+                });
+            });
+    });
+    }
+}
+
 exports.toCMS = function(db,homepage) 
 {
     return function(req, res) {

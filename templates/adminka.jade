@@ -2,37 +2,8 @@ extends layout_admin
 
 block content
   script(src='#{homepage}/js/myJS_admin.js')
-  div(class="bs-component")
-    div(class="navbar navbar-default")
-      div(class="navbar-inner")
-        a(class="brand" href="#">Имя проекта)
-        ul(class="nav navbar-nav")
-          li
-            a(href="#{homepage}") Выход на главную
-          li(class="active")
-            a(href="#{homepage}/admin") О компании
-          li(class="dropdown")
-            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
-              b(class="caret")
-            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
-              li
-                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-types") Типы жалюзи
-              li
-                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-positions") Виды жалюзи
-          li(class="dropdown")
-            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Рольставни
-              b(class="caret")
-            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
-              li
-                a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставен
-              li
-                a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставен
-          li
-            a(href="#{homepage}/admin/images") Изображения
-          li
-            a(href="#{homepage}/admin/orders") Заявки
-          li
-            a(href="#{homepage}/logout") Выход 
+  script.
+      document.getElementById('acmp').className+=" active"
   div.tabbable
     ul(class="nav nav-tabs")
       li(class="active")
