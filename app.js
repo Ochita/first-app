@@ -118,7 +118,7 @@ app.get('/admin/orders', restrict,routes.admin_orders(db,homepage));
 app.get('/admin/images', restrict,routes.admin_images(db,homepage));
 app.get('/login',routes.toCMS(db,homepage));
 
-app.get('/admin/load_:image',restrict,routes.load_image(db,homepage));
+//app.get('/admin/load_:image',restrict,routes.load_image(db,homepage));
 app.post('/admin/upload_:image',restrict, function(req, res)
 {
 	var name = req.params.image+'.jpg';
@@ -128,17 +128,13 @@ app.post('/admin/upload_:image',restrict, function(req, res)
             console.log('-> upload done');
         });
 	form.on('file', function(field, file) {
-		//console.log('file');
-            //rename the incoming file to the file's name
-                fs.rename(file.path, form.uploadDir + "/" + name);
+		fs.rename(file.path, form.uploadDir + "/" + name);
         })
 	form.parse(req, function(err, fields, files) 
 	{
-      //res.writeHead(200, {'content-type': 'text/html'});
-      //res.end('<a href="/admin/images"> back</a>');
-    	res.redirect(homepage+'/admin/images');
+    	//res.redirect(homepage+'/admin/images');
+    	res.redirect('back');
     });
-    //res.redirect('/admin/images');
 });
 
 app.use(express.static(path.join(__dirname,'../public')));	//я не знаю, что это и зачем, надо будет погуглить
@@ -235,6 +231,14 @@ io.sockets.on('connection', function (socket)
 	{
 		routes.editLouvers(db,'louvers',msg,socket);
 		socket.emit('editSortOk');
+	});
+	socket.on('newCompanyInfo',function(msg)
+	{
+		routes.editCompanyInfo(db,'information',msg,socket);
+	});
+	socket.on('newContacts',function(msg)
+	{
+		routes.editContacts(db,'information',msg,socket);
 	});
 });
 

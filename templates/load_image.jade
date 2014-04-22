@@ -36,5 +36,7 @@ block content
             a(href="#{homepage}/logout") Выход 
   form.form-horizontal(action="/admin/upload_#{imgname}" enctype="multipart/form-data" method="post")
       h1 Загрузка изображения
-      input(type="file" name="upload" multiple="multiple")          
+      br
+      input(type="file" name="upload" multiple="multiple")       
+      br   
       input(type="submit" value="Загрузить")

@@ -41,36 +41,33 @@ exports.toCMS = function(db,homepage)
     };
 };
 
-exports.load_image = function(db,homepage) 
-{
-    return function(req, res) {
-    var imgname = req.params.image;
-    /*res.writeHead(200, {'content-type': 'text/html'});
-  res.end(
-    '<form action="/admin/upload_'+imgname+'" enctype="multipart/form-data" method="post">'+
-    '<input type="file" name="upload" multiple="multiple"><br>'+
-    '<input type="submit" value="Upload">'+
-    '</form>'
-  );*/
-    res.render('load_image',{
-            "homepage": homepage, "imgname": imgname
-    });
-}
-}
-
 exports.admin_images = function(db,homepage) 
 {
     return function(req, res) {
         var collection = db.get('louvers');
-        collection.find({},{},function(e,docs){
+        collection.find({},{},function(e,docs)
+        {
             docsl = docs;
             collection = db.get('rollers');
-            collection.find({},{},function(e,docs){
-            res.render('imagelist', {
-                "louverslist" : docsl, "rollerslist":docs, title: 'Картинки,отображаемые в каталоге', "homepage": homepage
+            collection.find({},{},function(e,docs)
+            {
+                docsl2 = docs;
+                collection = db.get('rollers_type');
+                collection.find({},{},function(e,docs)
+                {
+                    docsl3 = docs;
+                    collection=db.get('louvers_type');
+                    collection.find({},{},function(e,docs)
+                    {
+                        res.render('imagelist', {"louverslist" : docsl, 
+                            "rollerslist":docsl2, "ltlist":docs, 
+                            "rtlist":docsl3, 
+                            title: 'Картинки,отображаемые в каталоге', 
+                            "homepage": homepage});
+                    });
+                });
             });
         });
-    });
     };
 };
 
@@ -78,9 +75,26 @@ exports.adminka = function(db,homepage)
 {
     return function(reg,res)
     {
-        //console.log(homepage);
-        res.render('adminka',{
-            "homepage": homepage
+        var collection = db.get('information');
+        collection.find({name:'companyInfo'},{},function(e,docs)
+        {
+            var inf="",adr="",ph="",ml="",gr="";
+            if (docs.length!=0) inf=docs[0].text;
+            collection.find({name:'contacts'},{},function(e,docs)
+            {
+                if (docs.length!=0) 
+                    {
+                        adr=docs[0].address;
+                        ph=docs[0].phone;
+                        ml=docs[0].email;
+                        gr=docs[0].graph;
+                    }
+                res.render('adminka',{
+                "homepage": homepage, "infa":inf,
+                address:adr,phone:ph,email:ml,graph:gr,
+                title: 'Информация о компании'
+                });
+        });
         });
     }
 }
@@ -224,7 +238,7 @@ exports.editType = function(db,cl_name,oldname,name,adress,description,socket)
     collection.update({name:oldname},{$set:documents},function(e,docs)
     {   
         error = e;
-        if(error==false) socket.emit('editTypeOk');
+        if(error==false || error==null) socket.emit('editTypeOk');
         if(error==true) socket.emit('Error');
     });
 }
@@ -237,7 +251,7 @@ exports.editRollers = function(db,cl_name,msg,socket)
     collection.update({name:msg.oldname},{$set:documents},function(e,docs)
     {   
         error = e;
-        if(error==false) socket.emit('editSortOk');
+        if(error==false || error==null) socket.emit('editSortOk');
         if(error==true) socket.emit('Error');
     });
 }
@@ -250,7 +264,7 @@ exports.editLouvers = function(db,cl_name,msg,socket)
     collection.update({name:msg.oldname},{$set:documents},function(e,docs)
     {   
         error = e;
-        if(error==false) socket.emit('editSortOk');
+        if(error==false || error==null) socket.emit('editSortOk');
         if(error==true) socket.emit('Error');
     });
 }
@@ -293,5 +307,59 @@ exports.sendLInfo=function(db,cl_name,id,socket)
     collection.find({_id:id},{},function(e,docs)
     {
         socket.emit('helloInfo',{name:docs[0].name,type:docs[0].type,calc_price:docs[0].calc_price,promo_price:docs[0].promo_price,description:docs[0].description});
+    });
+}
+
+exports.editCompanyInfo=function(db,cl_name,msg,socket)
+{
+    var error = false;
+    var collection = db.get(cl_name);
+    var documents={name:'companyInfo',text:msg.info_text};
+    collection.find({name:'companyInfo'},{},function(e,docs)
+    {
+        if (docs.length==0) 
+        {
+            collection.insert({name:'companyInfo'},{},function(e,docs)
+            {   
+                error = e;
+            });
+            if (error!=true)
+            {   
+                collection.update({name:'companyInfo'},{$set:documents},function(e,docs){});
+            }
+        }
+        else
+        {
+            collection.update({name:'companyInfo'},{$set:documents},function(e,docs){});
+        }
+        if(error==false) socket.emit('editInfoOk');
+        if(error==true) socket.emit('Error');
+    });
+}
+
+exports.editContacts=function(db,cl_name,msg,socket)
+{
+    var error = false;
+    var collection = db.get(cl_name);
+    var documents={name:'contacts',address:msg.address,phone:msg.phone,email:msg.email,graph:msg.graph};
+    collection.find({name:'contacts'},{},function(e,docs)
+    {
+        if (docs.length==0) 
+        {
+            collection.insert({name:'contacts'},{},function(e,docs)
+            {   
+                error = e;
+            });
+            if (error!=true)
+            {   
+                collection.update({name:'contacts'},{$set:documents},function(e,docs){});
+            }
+        }
+        else
+        {
+            collection.update({name:'contacts'},{$set:documents},function(e,docs){});
+        }
+        if(error==false) socket.emit('editContactsOk');
+        if(error==true) socket.emit('Error');
     });
 }

@@ -1,6 +1,7 @@
 extends layout_admin
 
 block content
+  script(src='#{homepage}/js/myJS_admin.js')
   div(class="bs-component")
     div(class="navbar navbar-default")
       div(class="navbar-inner")
@@ -9,7 +10,7 @@ block content
           li
             a(href="#{homepage}") Выход на главную
           li(class="active")
-            a(href="#") О компании
+            a(href="#{homepage}/admin") О компании
           li(class="dropdown")
             a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
               b(class="caret")
@@ -23,14 +24,57 @@ block content
               b(class="caret")
             ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
               li
-                a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставней
+                a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставен
               li
-                a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставней
+                a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставен
           li
             a(href="#{homepage}/admin/images") Изображения
           li
             a(href="#{homepage}/admin/orders") Заявки
           li
-            a(href="#") Контакты
-          li
             a(href="#{homepage}/logout") Выход 
+  div.tabbable
+    ul(class="nav nav-tabs")
+      li(class="active")
+        a(href="#tab1" data-toggle="tab") Фотографии
+      li
+        a(href="#tab2" data-toggle="tab") Информация о компании
+      li
+        a(href="#tab3" data-toggle="tab") Контакты
+    div.tab-content
+      div(class="tab-pane active" id="tab1")
+        br
+        label Основное фото:
+        br
+        a(href="#{homepage}/images/catalog/img_cmp.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px;")
+          image(src='#{homepage}/images/catalog/img_cmp.jpg' style="width:200px; height:120px; margin: 0 auto")
+        form.form-horizontal(action="/admin/upload_img_cmp" enctype="multipart/form-data" method="post")
+          input(type="file" name="upload" multiple="multiple")
+          input(type="submit" value="Загрузить")
+      div(class="tab-pane" id="tab2")
+        br
+        label Информация:
+        br
+        textarea(id="promoarea" name="description" rows="7" cols="86")=infa
+        br
+        button(class="btn btn-primary" id='EditInfo' href="#" type="") Сохранить изменения
+      div(class="tab-pane" id="tab3")
+        br
+        label Адрес:
+        br
+        input(id="address" type="text" name="address" value="#{address}" size="70")
+        br
+        label Телефон:
+        br
+        input(id="phone" type="text" name="phone" value="#{phone}" size="70")
+        br
+        label E-Mail:
+        br
+        input(id="email" type="text" name="email" value="#{email}" size="70")
+        br
+        label График работы:
+        br
+        input(id="graph" type="text" name="graph" value="#{graph}" size="70")
+        br
+        br
+        button(class="btn btn-primary" id='EditContacts' href="#" type="") Сохранить изменения

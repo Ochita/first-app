@@ -20,7 +20,7 @@ window.onload = function()
                 contact_name:document.getElementById('contact_name').value,
                 contact_mail:document.getElementById('contact_mail').value,
                 contact_phone:document.getElementById('contact_phone').value,
-                contact_address:str,
+                contact_address:document.getElementById('contact_address').value,
                 contact_data:now,
                 contact_message:document.getElementById('contact_message').value
                 });
