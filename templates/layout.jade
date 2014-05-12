@@ -2,9 +2,8 @@ doctype html
 html
   head
     title= title
-    //meta(name="viewport" content="width=device-width, initial-scale=1.0")
     link(href="#{homepage}/styles/stylesheet.css" rel="stylesheet" media="screen")
-    //script(type='text/javascript', language='javascript', href='http://localhost:3001/js/bootstrap.js')
+    link(href="#{homepage}/styles/myStyle.css" rel="stylesheet" media="screen")
   body
     script(src='#{homepage}/js/jquery.js')
     script(src='#{homepage}/js/bootstrap.min.js')
@@ -15,7 +14,7 @@ html
           a(class="brand" href="#">Имя проекта)
           ul(class="nav navbar-nav")
             li(id="gl")
-              a(href="#{homepage}") Главная
+              a(href="#{homepage}/") Главная
             li(id="acmp")
               a(href="#{homepage}/aboutCompany") О компании
             li(class="dropdown" id="lt")
@@ -37,4 +36,28 @@ html
             li
               a(href="#{homepage}/admin/") adminka
     br
-    block content
+    table(style="width:100%")
+      col(width="75%" id="col_info")
+      col(width="25%" id="col_menu")
+      tr
+        td(valign="top")
+          block content
+        td(valign="top" id="td_menu" style="display:inline")
+          block content2
+          ul(class="nav nav-pills nav-stacked" style="max-width: 300px;" id="ul_menu")
+            li
+              a(href="#{homepage}") Главная
+            li(class="divider")
+            li
+              a(href="#{homepage}/aboutCompany") О компании
+            li(class="divider")
+            each louver, i in louverslist
+              li
+                a(href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
+            li(class="divider")
+            each roller, i in rollerslist
+              li
+                a(href="#{homepage}/rolstavni/#{roller.adress}")= roller.name
+            li(class="divider")
+            li
+              a(href="#{homepage}/contacts") Контакты

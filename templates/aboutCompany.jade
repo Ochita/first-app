@@ -3,31 +3,7 @@ extends layout
 block content
     script.
       document.getElementById('acmp').className+=" active"
-
-    table(style="width:100%")
-      col(width="75%")
-      col(width="25%")
-      tr
-        td(valign="top")
-          p О компании
-          div(align="center")
-            image(src='#{homepage}/images/catalog/img_cmp.jpg' style="width:80%;" class="thumbnail")
-          p!=text
-        td(valign="top")
-          ul(class="nav nav-pills nav-stacked" style="max-width: 300px;")
-            li
-              a(href="#{homepage}") Главная
-            li(class="divider")
-            li
-              a(href="#{homepage}/aboutCompany") О компании
-            li(class="divider")
-            each louver, i in louverslist
-              li
-                a(href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
-            li(class="divider")
-            each roller, i in rollerslist
-              li
-                a(href="#{homepage}/rolstavni/#{roller.adress}")= roller.name
-            li(class="divider")
-            li
-              a(href="#{homepage}/contacts") Контакты
+    p О компании
+      div(align="center")
+        image(src='#{homepage}/images/catalog/img_cmp.jpg' style="width:80%;" class="zoom-images")
+      p!=text

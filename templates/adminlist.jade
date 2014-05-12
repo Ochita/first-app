@@ -1,0 +1,55 @@
+extends layout_admin
+
+block content
+    script.
+      document.getElementById('alst').className+=" active"
+    table(class="table table-striped table-bordered table-condensed")
+      tbody
+        tr
+          td Имя учетной записи
+          td
+          td 
+        each name,i in namelist
+          tr
+            td=name.login
+            td
+              a(href="#" id="delete_#{name.login}" class="delete_login") удалить
+            td
+              a(href="#" role="button" id="edit_#{name.login}" class="edit_login") изменить пароль
+    a(href="#AddAdmin" role="button" id="AddAdmin2" class="AddAdmin2" data-toggle="modal") Добавить новую учетную запись
+    div(class="modal" id="AddAdmin" tabindex="-1" role="dialog" aria-labelledby="AddAdminLabel" aria-hidden="true")
+      div(class="modal-dialog")
+        div(class="modal-content")
+          div(class="modal-header")
+            button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
+            h3(id="AddLouverLabel") Добавление учетной записи
+          form.form-horizontal(method="post" action="/addadmin")
+            div(class="modal-body")
+              label Логин:
+              br
+              input(type="text" name="username" id="input_username" placeholder="login" size="70")
+              br
+              label Пароль:
+              br
+              input(type="password" name="password" id="input_password" placeholder="password" size="70")
+            div(class="modal-footer")
+              button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
+              button(class="btn btn-primary" id='AddAN' href="#" type="submit") Отправить
+    //окно редактирования          
+    //div(class="modal" id="EditLouver" tabindex="-1" role="dialog" aria-labelledby="EditLouverLabel" aria-hidden="true")
+      //div(class="modal-dialog")
+        //div(class="modal-content")
+          //div(class="modal-header")
+            //button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
+            //h3(id="EditLouverLabel") Редактирование типа
+          //div(class="modal-body")
+            //label Название типа:
+            //br
+            //input(id="name" style="width: 377px;" type="text" name="name" value="" size="70")
+            //br
+            ///label Описание:
+            //br
+            //textarea(id="description" style="width: 377px;" name="description" rows="7" cols="86")
+          //div(class="modal-footer")
+            //button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
+            //button(class="btn btn-primary" id='EditLType' href="#" type="submit") Отправить    

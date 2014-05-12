@@ -8,7 +8,6 @@ block content
       table(class="table table-striped table-bordered table-condensed")
         tbody
           tr
-            td ID
             td Название
             td Тип
             td Цена (калькулятор)
@@ -16,8 +15,7 @@ block content
             td
             td
           each louver, i in llist
-            tr
-              td=louver._id  
+            tr 
               td=louver.name
               td=louver.type
               td=louver.calc_price

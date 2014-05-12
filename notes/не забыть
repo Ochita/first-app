@@ -20,3 +20,9 @@ git ci -m "initial_commit_8"
 git push -u origin master
 #kartachena
 #jane1892
+
+http://helpers.com.ua/database/mongodb/perenos-mongodb-i-rezervnoe-kopirovanie/
+
+cd ~/projects/node-tutorial/first-app/
+mongodump -db data -o STOREMONGO
+mongorestore -db data STOREMONGO/data

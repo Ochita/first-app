@@ -4,6 +4,11 @@ String.prototype.replaceAll=function(find, replace_to){
 
 window.onload = function()
 { 
+    //document.getElementById("td_menu").style.display="none";
+    //document.getElementById("ul_menu").style.display="none";
+    //document.getElementById('col_menu').width="100%";
+    //document.getElementById('col_info').width="0%";
+
     document.getElementById('newOrder').onclick = function(e,homepage) 
     {
         regexp = /[a-z0-9!$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[a-z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)\b/

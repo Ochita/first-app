@@ -13,21 +13,25 @@ html
         a(class="brand" href="#">Имя проекта)
         ul(class="nav navbar-nav")
           li
-            a(href="#{homepage}") Выход на главную
+            a(href="#{homepage}/") Выход на главную
           li(id="acmp")
             a(href="#{homepage}/admin") О компании
+          //li(class="dropdown" id="acmp")
+            //a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Статичные страницы
+              //b(class="caret")
+            //ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+              //li
+                //a(tabindex="-1" href="#{homepage}/admin/static_texts") Текст
+              //li
+                //a(tabindex="-1" href="#{homepage}/admin/add_img") Добавить изображение
           li(class="dropdown" id="ll")
-            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
+            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Каталог
               b(class="caret")
             ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
               li
                 a(tabindex="-1" href="#{homepage}/admin/zhaluzi-types") Типы жалюзи
               li
                 a(tabindex="-1" href="#{homepage}/admin/zhaluzi-positions") Виды жалюзи
-          li(class="dropdown" id="rr")
-            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Рольставни
-              b(class="caret")
-            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
               li
                 a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставен
               li
@@ -36,6 +40,8 @@ html
             a(href="#{homepage}/admin/images") Изображения
           li(id="ord")
             a(href="#{homepage}/admin/orders") Заявки
+          li(id="alst")
+            a(href="#{homepage}/admin/adminlist") Учетные записи
           li
             a(href="#{homepage}/logout") Выход 
     block content

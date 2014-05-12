@@ -5,9 +5,95 @@ String.prototype.stripTags = function() {
   return this.replace(/<\/?[^>]+>/g, '');
 };
 
-exports.index = function(req, res){
-  res.render('index', { title: 'Express' });
-};
+transliterate = (function() 
+{
+        var rus = "щ   ш  ч  ц  ю  я  ё  ж  ъ  ы  э  а б в г д е з и й к л м н о п р с т у ф х ь".split(/ +/g),
+            eng = "shh sh ch cz yu ya yo zh `` y e a b v g d e z i j k l m n o p r s t u f x `".split(/ +/g);
+        return function(text, engToRus) 
+        {
+            var x;
+            for(x = 0; x < rus.length; x++) 
+            {
+                text = text.split(engToRus ? eng[x] : rus[x]).join(engToRus ? rus[x] : eng[x]);
+                text = text.split(engToRus ? eng[x].toUpperCase() : rus[x].toUpperCase()).join(engToRus ? rus[x].toUpperCase() : eng[x].toUpperCase()); 
+            }
+            return text;
+        }
+    }
+)();
+
+function MakeAddress(str)
+{
+    var newstr = transliterate(str);
+    newstr = newstr.replaceAll("`","");
+    newstr = newstr.replaceAll(" ","-")
+    return newstr;
+}
+
+exports.add_img_with_name = function(db,homepage)
+{
+    return function(req, res) {
+    res.render('load_image', {    
+        title: 'Загрузка изображения', "homepage": homepage
+        });
+    };
+}
+
+function generate404(req,res,db,homepage)
+{
+    var collection = db.get('louvers_type');
+    console.log(homepage+" hmp")
+    collection.find({},{},function(e,docs)
+    {
+        docsl = docs;
+        collection = db.get('rollers_type');
+        collection.find({},{},function(e,docs)
+        {
+            res.render('notfound', {
+            "louverslist" : docsl, "rollerslist":docs, title: '404', "homepage": homepage,
+            text:"<h1>404 Not Found</h1>"
+            });
+        });
+    });
+}
+
+exports.static_page = function(db,homepage)
+{
+    return function(req, res) {
+    var lname = req.params.static_page;
+    var collection = db.get('static_pages');
+    collection.find({},{fields:{_id: 0,name:1,text:1,title:1}},function(e,docs){
+        var result = false; var number=-1;
+        for (var i in docs) 
+        if (docs[i].name==lname) 
+            {
+                result = true;
+                number = i;
+            }
+        if (!result) 
+        {
+            generate404(req,res,db,homepage);
+        }
+        else
+        {
+            docsS = docs;
+            collection = db.get('louvers_type');
+            collection.find({},{},function(e,docs)
+            {
+                docsl = docs;
+                collection = db.get('rollers_type');
+                collection.find({},{},function(e,docs)
+                {
+                res.render('notfound', {
+                "louverslist" : docsl, "rollerslist":docs, title: docsS[number].title, "homepage": homepage,
+                text:docsS[number].text
+                });
+                });
+        });
+        }
+    });
+    }
+}
 
 exports.tohome = function(db,homepage) 
 {
@@ -89,7 +175,7 @@ exports.itemslist=function(db,homepage,jadefile,itemcl)
                         text=docs[0].description;
                         text = text.stripTags();
                         text = text.replaceAll("\n","<br>");
-                        id=docs[0]._id;
+                        id=docs[0].adress;
                         collection = db.get(itemcl);
                         if (itemcl=="rollers") 
                         collection.find({type_roller:typename},{},function(e,docs)
@@ -133,6 +219,18 @@ exports.toCMS = function(db,homepage)
     });
     };
 };
+
+exports.adminlist = function(db,homepage)
+{
+    return function(req,res)
+    {
+        var collection = db.get('Admins');
+        collection.find({},{login:1},function(e,docs)
+        {
+            res.render('adminlist',{namelist:docs,title: 'Список администраторов', "homepage": homepage});
+        });
+    }
+}
 
 exports.admin_images = function(db,homepage) 
 {
@@ -283,7 +381,7 @@ exports.addOrder = function(db,name,mail,phone,address,data,comment,error)   //�
 exports.addRoller = function(db,msg,socket)
 {
     var collection = db.get('rollers');
-    var documents = {name:msg.name,type_roller:msg.type_roller,type_global:msg.type_global,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
+    var documents = {name:msg.name,adress:MakeAddress(msg.name),type_roller:msg.type_roller,type_global:msg.type_global,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
     collection.insert(documents,{},function(e,docs)
     {   
         if (e) socket.emit('ExistingAdress');
@@ -294,7 +392,7 @@ exports.addRoller = function(db,msg,socket)
 exports.addLouver = function(db,msg,socket)
 {
     var collection = db.get('louvers');
-    var documents = {name:msg.name,type:msg.type,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
+    var documents = {name:msg.name,adress:MakeAddress(msg.name),type:msg.type,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
     collection.insert(documents,{},function(e,docs)
     {   
         if (e) socket.emit('ExistingAdress');
@@ -302,11 +400,11 @@ exports.addLouver = function(db,msg,socket)
     });
 }
 
-exports.addType = function(db,cl_name,name,adress,description,socket)   
+exports.addType = function(db,cl_name,name,description,socket)   
 {
     var error = false;
     var collection = db.get(cl_name);
-    var documents = {name:name,adress:adress,description:description};
+    var documents = {name:name,adress:MakeAddress(name),description:description};
     collection.find({adress:adress},{},function(e,docs)
     {
         if (docs.length!=0) error = true;
@@ -323,11 +421,11 @@ exports.addType = function(db,cl_name,name,adress,description,socket)
     });
 }
 
-exports.editType = function(db,cl_name,oldname,name,adress,description,socket)
+exports.editType = function(db,cl_name,oldname,name,description,socket)
 {
     var error = false;
     var collection = db.get(cl_name);
-    var documents = {name:name,adress:adress,description:description};
+    var documents = {name:name,adress:MakeAddress(name),description:description};
     collection.update({name:oldname},{$set:documents},function(e,docs)
     {   
         error = e;
@@ -340,7 +438,7 @@ exports.editRollers = function(db,cl_name,msg,socket)
 {
     var error = false;
     var collection = db.get(cl_name);
-    var documents = {name:msg.name,type_roller:msg.type_roller,type_global:msg.type_global,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
+    var documents = {name:msg.name,adress:MakeAddress(msg.name),type_roller:msg.type_roller,type_global:msg.type_global,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
     collection.update({name:msg.oldname},{$set:documents},function(e,docs)
     {   
         error = e;
@@ -353,7 +451,7 @@ exports.editLouvers = function(db,cl_name,msg,socket)
 {
     var error = false;
     var collection = db.get(cl_name);
-    var documents = {name:msg.name,type:msg.type,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
+    var documents = {name:msg.name,adress:MakeAddress(msg.name),type:msg.type,calc_price:msg.calc_price,promo_price:msg.promo_price,description:msg.description};
     collection.update({name:msg.oldname},{$set:documents},function(e,docs)
     {   
         error = e;

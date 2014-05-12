@@ -13,7 +13,7 @@ var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/data');
 
-var homepage="http://localhost:3001";
+var homepage="http://0.0.0.0:3001";
 
 var app = express();
 app.set('views',__dirname+'/templates');
@@ -38,28 +38,34 @@ app.use(function(req, res, next)
   next();
 });     
 
-var users = {Thor:{name:'Thor'}};
-hash('111', function(err, salt, hash)
+function addadmin(name,passw,res)
+{
+var collection = db.get('Admins');
+var docs = {login:name,salt:"salt",hash:"hash"}
+hash(passw, function(err, salt, hash)
 {
   if (err) throw err;
-  // store the salt & hash in the "db"
-  users.Thor.salt = salt;
-  users.Thor.hash = hash.toString();
-});
+  docs.salt = salt;
+  docs.hash = hash.toString();
+  collection.insert(docs,{},function(e,docs1){
+  		res.redirect('/admin/adminlist')
+  });
+})
+};
 
 function authenticate(name, pass, fn) 
 {
   if (!module.parent) console.log('authenticating %s:%s', name, pass);
-  var user = users[name];
-  // query the db for the given username
-  if (!user) return fn(new Error('cannot find user'));
-  // apply the same algorithm to the POSTed password, applying the hash against the pass / salt, if there is a match we found the user
-  hash(pass, user.salt, function(err, hash)
+  var collection = db.get('Admins');
+  collection.find({login:name},{},function(e,docs){
+  
+  if (docs.length > 0 )
+  hash(pass,  docs[0].salt, function(err, hash)
   {
-    if (err) return fn(err);
-    if (hash.toString() == user.hash) return fn(null, user);
+    if (docs[0].hash == hash.toString()) return fn(null, docs[0].login);
     fn(new Error('invalid password'));
   })
+})
 };
 
 function restrict(req, res, next) {
@@ -76,6 +82,11 @@ app.get('/logout', function(req, res){
     res.redirect('/');
   });
 });
+
+app.post('/addadmin',function(req,res)
+{
+	addadmin(req.body.username,req.body.password,res);
+})
 
 app.post('/login', function(req, res)
 {
@@ -119,35 +130,63 @@ app.get('/admin/rollers-types', restrict,routes.admin_rollers(db,homepage));
 app.get('/admin/rollers-positions', restrict,routes.admin_rollers0(db,homepage));
 app.get('/admin/orders', restrict,routes.admin_orders(db,homepage));
 app.get('/admin/images', restrict,routes.admin_images(db,homepage));
+app.get('/admin/adminlist',restrict,routes.adminlist(db,homepage));
+app.get('/admin/add_img',restrict,routes.add_img_with_name(db,homepage));
 app.get('/login',routes.toCMS(db,homepage));
 
-//app.get('/admin/load_:image',restrict,routes.load_image(db,homepage));
-app.post('/admin/upload_:image',restrict, function(req, res)
+app.get('/:static_page',routes.static_page(db,homepage));
+
+app.post('/admin/upload_static_img',restrict, function(req, res)
 {
-	var name = req.params.image+'.jpg';
-	console.log(name);
-	var form = new formidable.IncomingForm({ uploadDir:__dirname+'/templates/img/catalog'});
+
+	var form = new formidable.IncomingForm({ uploadDir:__dirname+'/templates/img'});
+		var name = form.imgname;
 	form.on('end', function() {
-            console.log('-> upload done');
+            console.log(name+' -> upload done');
         });
 	form.on('file', function(field, file) {
 		fs.rename(file.path, form.uploadDir + "/" + name);
         })
 	form.parse(req, function(err, fields, files) 
 	{
-    	//res.redirect(homepage+'/admin/images');
+    	res.redirect('back');
+    });
+});
+
+app.post('/admin/upload_:image',restrict, function(req, res)
+{
+	var name = req.params.image+'.jpg';
+	var form = new formidable.IncomingForm({ uploadDir:__dirname+'/templates/img/catalog'});
+	form.on('end', function() {
+            console.log(name+' -> upload done');
+        });
+	form.on('file', function(field, file) {
+		fs.rename(file.path, form.uploadDir + "/" + name);
+        })
+	form.parse(req, function(err, fields, files) 
+	{
     	res.redirect('back');
     });
 });
 
 app.use(express.static(path.join(__dirname,'../public')));	//я не знаю, что это и зачем, надо будет погуглить
 
-server = http.createServer(app).listen(config.get('port'), function(homepage)
+server = http.createServer(app).listen(config.get('port'), function()
 {
 	console.log('Express server listening on port ' + config.get('port'));
 	homepage = "http://"+this.address().address+":"+this.address().port;
 	console.log("homepage = "+homepage);
 });
+/*server = http.createServer(app);
+server.listen(config.get('port'), function()
+{
+	server.close(function()
+	{
+   		server.listen(3001,'192.168.0.101')
+		homepage = "http://192.168.0.101:3001";
+		console.log("homepage = "+homepage);
+	});
+});*/
 
 var io = require('socket.io').listen(server);
 io.set('log level', 1);
@@ -161,11 +200,11 @@ io.sockets.on('connection', function (socket)
 	});
 	socket.on('newLouversType',function(msg)
 	{
-		routes.addType(db,'louvers_type',msg.name,msg.adress,msg.description,socket);
+		routes.addType(db,'louvers_type',msg.name,msg.description,socket);
 	});
 	socket.on('newRollersType',function(msg)
 	{
-		routes.addType(db,'rollers_type',msg.name,msg.adress,msg.description,socket);
+		routes.addType(db,'rollers_type',msg.name,msg.description,socket);
 	});
 	socket.on('newRollers',function(msg)
 	{
@@ -206,7 +245,7 @@ io.sockets.on('connection', function (socket)
 	})
 	socket.on('editLouversType',function(msg)
 	{
-		routes.editType(db,'louvers_type',msg.oldname,msg.name,msg.adress,msg.description,socket);
+		routes.editType(db,'louvers_type',msg.oldname,msg.name,msg.description,socket);
 	});
 	socket.on('getRTypeInfo',function (msg)
 	{
@@ -214,7 +253,7 @@ io.sockets.on('connection', function (socket)
 	})
 	socket.on('editRollersType',function (msg)
 	{
-		routes.editType(db,'rollers_type',msg.oldname,msg.name,msg.adress,msg.description,socket);
+		routes.editType(db,'rollers_type',msg.oldname,msg.name,msg.description,socket);
 		socket.emit('editTypeOk');	
 	});
 	socket.on('getRInfo',function (msg)

@@ -1,41 +1,12 @@
 extends layout_admin
 
 block content
-  div(class="bs-component")
-    div(class="navbar navbar-default")
-      div(class="navbar-inner")
-        a(class="brand" href="#">Имя проекта)
-        ul(class="nav navbar-nav")
-          li
-            a(href="#{homepage}") Выход на главную
-          li
-            a(href="#") О компании
-          li(class="dropdown")
-            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
-              b(class="caret")
-            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
-              li
-                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-types") Типы жалюзи
-              li
-                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-positions") Виды жалюзи
-          li(class="dropdown")
-            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Рольставни
-              b(class="caret")
-            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
-              li
-                a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставней
-              li
-                a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставней
-          li(class="active")
-            a(href="#{homepage}/admin/images") Изображения
-          li
-            a(href="#{homepage}/admin/orders") Заявки
-          li
-            a(href="#") Контакты
-          li
-            a(href="#{homepage}/logout") Выход 
-  form.form-horizontal(action="/admin/upload_#{imgname}" enctype="multipart/form-data" method="post")
-      h1 Загрузка изображения
+  form.form-horizontal(action="/admin/upload_static_img" enctype="multipart/form-data" method="post")
+      //h1 Загрузка изображения
+      label Имя файла:
+      br
+      input(type="text" name="imgname" multiple="multiple" placeholder="name.jpg")  
+      br
       br
       input(type="file" name="upload" multiple="multiple")       
       br   

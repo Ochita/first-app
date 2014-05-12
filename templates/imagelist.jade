@@ -23,10 +23,10 @@ block content
                     td
                       p=lt.name
                     td
-                      a(href="#{homepage}/images/catalog/img_lt#{lt._id}.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
-                        image(src='#{homepage}/images/catalog/img_lt#{lt._id}.jpg' style="width:200px; height:120px; margin: 0 auto")
+                      a(href="#{homepage}/images/catalog/img_lt#{lt.adress}.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
+                        image(src='#{homepage}/images/catalog/img_lt#{lt.adress}.jpg' style="width:200px; height:120px; margin: 0 auto")
                     td  
-                      form.form-horizontal(action="/admin/upload_img_lt#{lt._id}" enctype="multipart/form-data" method="post")
+                      form.form-horizontal(action="/admin/upload_img_lt#{lt.adress}" enctype="multipart/form-data" method="post")
                         input(type="file" name="upload" multiple="multiple")
                         input(type="submit" value="Загрузить")
       div(class="tab-pane" id="tab2")
@@ -38,10 +38,10 @@ block content
                     td 
                       p=rt.name
                     td
-                      a(href="#{homepage}/images/catalog/img_rt#{rt._id}.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
-                        image(src='#{homepage}/images/catalog/img_rt#{rt._id}.jpg' style="width:200px; height:120px; margin: 0 auto")
+                      a(href="#{homepage}/images/catalog/img_rt#{rt.adress}.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
+                        image(src='#{homepage}/images/catalog/img_rt#{rt.adress}.jpg' style="width:200px; height:120px; margin: 0 auto")
                     td  
-                      form.form-horizontal(action="/admin/upload_img_rt#{rt._id}" enctype="multipart/form-data" method="post")
+                      form.form-horizontal(action="/admin/upload_img_rt#{rt.adress}" enctype="multipart/form-data" method="post")
                         input(type="file" name="upload" multiple="multiple")
                         input(type="submit" value="Загрузить")
       div(class="tab-pane" id="tab3")
@@ -53,21 +53,21 @@ block content
                   td 
                     p=louver.name
                   td
-                    a(href="#{homepage}/images/catalog/img_l#{louver._id}_1.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
-                      image(src='#{homepage}/images/catalog/img_l#{louver._id}_1.jpg' style="width:200px; height:120px; margin: 0 auto")
-                    form.form-inline(action="/admin/upload_img_l#{louver._id}_1" enctype="multipart/form-data" method="post")
+                    a(href="#{homepage}/images/catalog/img_l#{louver.adress}_1.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
+                      image(src='#{homepage}/images/catalog/img_l#{louver.adress}_1.jpg' style="width:200px; height:120px; margin: 0 auto")
+                    form.form-inline(action="/admin/upload_img_l#{louver.adress}_1" enctype="multipart/form-data" method="post")
                       input(type="file" name="upload" multiple="multiple")
                       input(type="submit" value="Загрузить")  
                   td
-                    a(href="#{homepage}/images/catalog/img_l#{louver._id}_2.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
-                      image(src='#{homepage}/images/catalog/img_l#{louver._id}_2.jpg' style="width:200px; height:120px; margin: 0 auto")
-                    form.form-inline(action="/admin/upload_img_l#{louver._id}_2" enctype="multipart/form-data" method="post")
+                    a(href="#{homepage}/images/catalog/img_l#{louver.adress}_2.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
+                      image(src='#{homepage}/images/catalog/img_l#{louver.adress}_2.jpg' style="width:200px; height:120px; margin: 0 auto")
+                    form.form-inline(action="/admin/upload_img_l#{louver.adress}_2" enctype="multipart/form-data" method="post")
                       input(type="file" name="upload" multiple="multiple")
                       input(type="submit" value="Загрузить")
                   td
-                    a(href="#{homepage}/images/catalog/img_l#{louver._id}_3.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
-                      image(src='#{homepage}/images/catalog/img_l#{louver._id}_3.jpg' style="width:200px; height:120px; margin: 0 auto")
-                    form.form-inline(action="/admin/upload_img_l#{louver._id}_3" enctype="multipart/form-data" method="post")
+                    a(href="#{homepage}/images/catalog/img_l#{louver.adress}_3.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
+                      image(src='#{homepage}/images/catalog/img_l#{louver.adress}_3.jpg' style="width:200px; height:120px; margin: 0 auto")
+                    form.form-inline(action="/admin/upload_img_l#{louver.adress}_3" enctype="multipart/form-data" method="post")
                       input(type="file" name="upload" multiple="multiple")
                       input(type="submit" value="Загрузить")
       div(class="tab-pane" id="tab4")
@@ -79,10 +79,10 @@ block content
                     td 
                       p=roller.name
                     td
-                      a(href="#{homepage}/images/catalog/img_r#{roller._id}.jpg" class="thumbnail" target="_blank" style="width:120px; height:130px; margin: 0 auto")
-                        image(src='#{homepage}/images/catalog/img_r#{roller._id}.jpg' style="width:120px; height:120px; margin: 0 auto")
+                      a(href="#{homepage}/images/catalog/img_r#{roller.adress}.jpg" class="thumbnail" target="_blank" style="width:120px; height:130px; margin: 0 auto")
+                        image(src='#{homepage}/images/catalog/img_r#{roller.adress}.jpg' style="width:120px; height:120px; margin: 0 auto")
                     td  
-                      form.form-horizontal(action="/admin/upload_img_r#{roller._id}" enctype="multipart/form-data" method="post")
+                      form.form-horizontal(action="/admin/upload_img_r#{roller.adress}" enctype="multipart/form-data" method="post")
                         input(type="file" name="upload" multiple="multiple")
                         input(type="submit" value="Загрузить")
 

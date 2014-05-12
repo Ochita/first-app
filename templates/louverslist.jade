@@ -3,47 +3,23 @@ extends layout
 block content
     script.
       document.getElementById('lt').className+=" active"
-
-    table(style="width:100%")
-      col(width="75%")
-      col(width="25%")
-      tr
-        td(valign="top")
-          p=typename
-          div(align="center")
-            image(src='#{homepage}/images/catalog/img_lt#{id}.jpg' style="width:80%;" class="thumbnail")
-          ul
-            each louver,i in itemslist
-              li
-                p=(louver.name+"   -     от "+louver.promo_price+" руб.")
-                table(align="center")
-                  tr
-                    td
-                      a(href="#{homepage}/images/catalog/img_l#{louver._id}_1.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
-                        image(src='#{homepage}/images/catalog/img_l#{louver._id}_1.jpg' style="width:200px; height:120px; margin: 0 auto")
-                    td
-                      a(href="#{homepage}/images/catalog/img_l#{louver._id}_2.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
-                        image(src='#{homepage}/images/catalog/img_l#{louver._id}_2.jpg' style="width:200px; height:120px; margin: 0 auto")
-                    td
-                      a(href="#{homepage}/images/catalog/img_l#{louver._id}_3.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
-                        image(src='#{homepage}/images/catalog/img_l#{louver._id}_3.jpg' style="width:200px; height:120px; margin: 0 auto")
-                p=louver.description
-          p!=text
-        td(valign="top")
-          ul(class="nav nav-pills nav-stacked" style="max-width: 300px;")
-            li
-              a(href="#{homepage}") Главная
-            li(class="divider")
-            li
-              a(href="#{homepage}/aboutCompany") О компании
-            li(class="divider")
-            each louver, i in louverslist
-              li
-                a(href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
-            li(class="divider")
-            each roller, i in rollerslist
-              li
-                a(href="#{homepage}/rolstavni/#{roller.adress}")= roller.name
-            li(class="divider")
-            li
-              a(href="#{homepage}/contacts") Контакты
+    p=typename
+      div(align="center")
+        image(src='#{homepage}/images/catalog/img_lt#{id}.jpg' style="width:80%;" class="thumbnail")
+      ul
+        each louver,i in itemslist
+          li
+            p=(louver.name+"   -     от "+louver.promo_price+" руб.")
+            table(align="center")
+              tr
+                td
+                  a(href="#{homepage}/images/catalog/img_l#{louver.adress}_1.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
+                    image(src='#{homepage}/images/catalog/img_l#{louver.adress}_1.jpg' style="width:200px; height:120px; margin: 0 auto")
+                td
+                  a(href="#{homepage}/images/catalog/img_l#{louver.adress}_2.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
+                    image(src='#{homepage}/images/catalog/img_l#{louver.adress}_2.jpg' style="width:200px; height:120px; margin: 0 auto")
+                td
+                  a(href="#{homepage}/images/catalog/img_l#{louver.adress}_3.jpg" class="thumbnail" target="_blank" style="width:200px; height:130px; margin: 0 auto")
+                    image(src='#{homepage}/images/catalog/img_l#{louver.adress}_3.jpg' style="width:200px; height:120px; margin: 0 auto")
+            p=louver.description
+      p!=text

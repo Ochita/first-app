@@ -1,0 +1,20 @@
+
+.zoom-images {
+  cursor: zoom-in;
+}
+.zoom-images:focus {
+  position: fixed;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%); transform: translate(-50%, -50%);
+  width: auto;
+  height: auto;
+  max-width: 99%;
+  max-height: 99%;
+  pointer-events: none;  /* убрать, если не нужно, чтобы при клике на увеличенное фото, оно возвращалось в исходное состояние */
+  box-shadow: 0 0 20px #000, 0 0 0 1000px rgba(210,210,210,.4);
+}
+.zoom-images:focus ~ * {  /* не идеально: теги, выше элемента остаются активными */
+  pointer-events: none;
+}
