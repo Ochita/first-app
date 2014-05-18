@@ -2,29 +2,58 @@ doctype html
 html
   head
     title= title
-    link(href="#{homepage}/styles/stylesheet.css" rel="stylesheet" media="screen")
-    link(href="#{homepage}/styles/myStyle.css" rel="stylesheet" media="screen")
+    //link(href="#{homepage}/styles/stylesheet.css" rel="stylesheet" media="screen")
+    //link(href="#{homepage}/styles/myStyle.css" rel="stylesheet" media="screen")
+    link(href="#{homepage}/styles/bootstrap.css" rel="stylesheet")
+    link(href="#{homepage}/styles/font-awesome.min.css" rel="stylesheet")
+    link(href="#{homepage}/styles/jquery.bxslider.css" rel="stylesheet")
+    link(href="#{homepage}/styles/style.css" rel="stylesheet")
   body
-    script(src='#{homepage}/js/jquery.js')
-    script(src='#{homepage}/js/bootstrap.min.js')
+    script(src="#{homepage}/js/jquery.js")
+    script(src="#{homepage}/js/bootstrap.js")
+    script(src="#{homepage}/js/jquery.bxslider.min.js")
+    script(src="#{homepage}/js/jquery.blImageCenter.js")
+    script(src="#{homepage}/js/mimity.js")
     script(src="#{homepage}/socket.io/socket.io.js")
-    div(class="bs-component")
-      div(class="navbar navbar-default")
-        div(class="navbar-inner")
-          a(class="brand" href="#">Имя проекта)
+    header
+      div(class="container")
+        div(class="row")
+          table(style="width:100%")
+            tr
+              td(align="left")
+                div(class="well logo")
+                  a(href="#{homepage}") ООО 
+                    span МИКС-сервис
+                  div Монтаж и производство конструкций
+              td(align="right")
+                div(class="well logo")
+                  a(href="#{homepage}") (4942) 
+                    span 39-00-34 
+                  div г. Кострома, ул. Галичская, 100
+
+    nav(class="navbar navbar-inverse" role="navigation")
+      div(class="container")
+        div(class="navbar-header")
+          button(type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse")
+            span(class="sr-only") Toggle navigation
+            span(class="icon-bar")
+            span(class="icon-bar")
+            span(class="icon-bar")
+          a(class="navbar-brand visible-xs" href="index.html") ООО МИКС-сервис
+        div(class="collapse navbar-collapse navbar-ex1-collapse")
           ul(class="nav navbar-nav")
             li(id="gl")
               a(href="#{homepage}/") Главная
             li(id="acmp")
               a(href="#{homepage}/aboutCompany") О компании
-            li(class="dropdown" id="lt")
+            li(class="nav-dropdown" id="lt")
               a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Жалюзи
                 b(class="caret")
               ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
                 each louver, i in louverslist
                   li
                     a(tabindex="-1" href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
-            li(class="dropdown" id="rt")
+            li(class="nav-dropdown" id="rt")
               a(id="drop2" href="#" class="dropdown-toggle" data-toggle="dropdown") Рольставни
                 b(class="caret")
               ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
@@ -44,20 +73,15 @@ html
           block content
         td(valign="top" id="td_menu" style="display:inline")
           block content2
-          ul(class="nav nav-pills nav-stacked" style="max-width: 300px;" id="ul_menu")
-            li
-              a(href="#{homepage}") Главная
-            li(class="divider")
-            li
-              a(href="#{homepage}/aboutCompany") О компании
-            li(class="divider")
+          div(class="list-group list-categ")
+            a(href="#{homepage}" class="list-group-item") Главная
+            a(href="#{homepage}/aboutCompany" class="list-group-item") О компании
+            a(href="#{homepage}/contacts" class="list-group-item") Контакты
+          div(class="list-group list-categ")
+            span(class="title") Жалюзи
             each louver, i in louverslist
-              li
-                a(href="#{homepage}/zhaluzi/#{louver.adress}")= louver.name
-            li(class="divider")
+              a(href="#{homepage}/zhaluzi/#{louver.adress}" class="list-group-item")= louver.name
+           div(class="list-group list-categ")
+            span(class="title") Рольставни
             each roller, i in rollerslist
-              li
-                a(href="#{homepage}/rolstavni/#{roller.adress}")= roller.name
-            li(class="divider")
-            li
-              a(href="#{homepage}/contacts") Контакты
+              a(href="#{homepage}/rolstavni/#{roller.adress}" class="list-group-item")= roller.name

@@ -1,14 +1,15 @@
-cd ~/mongodb/mongodb-linux-x86_64-2.4.9/bin
-mongo
-use data
+mongo data
 
 > show collections
+Admins
+calc_statistic
+information
 louvers
 louvers_type
 orders
 rollers
 rollers_type
-information
+static_pages
 system.indexes
 
 
@@ -16,13 +17,24 @@ cd ~/projects/node-tutorial/first-app/
 node app
 
 git add .
-git ci -m "initial_commit_8"
+git ci -m "initial_commit_9"
 git push -u origin master
 #kartachena
-#jane1892
+#
 
 http://helpers.com.ua/database/mongodb/perenos-mongodb-i-rezervnoe-kopirovanie/
 
 cd ~/projects/node-tutorial/first-app/
 mongodump -db data -o STOREMONGO
 mongorestore -db data STOREMONGO/data
+
+1. Сделать окно выбора разделов каталога
+2. Сделать два калькулятора+
+3. Сделать красивую верстку :)
+4. В админке добавить статистику пользования калькулятором+
+5. Переработать меню добавления типов и видов продукции чтобы было понятнее :)
+_______
+админка+
+Нормальные логи
+статичные страницы+картинки с именем+редактирование лэйаута
+удаление картинок

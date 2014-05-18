@@ -1,0 +1,67 @@
+extends layout_admin
+
+block content
+  script.
+      document.getElementById('k_stat').className+=" active"
+  script.
+      window.onload = function(e,homepage) 
+      {
+      socket = io.connect(homepage);
+      socket.on('DelStatOk', function () 
+      {
+          location.reload();
+      });
+      document.getElementById('deleteAll').onclick = function(e,homepage) 
+      {   
+        if (confirm('Вы действительно хотите удалить все данные о пользовании калькулятором?'))
+        socket.emit('deleteStatistic');
+      }
+      }
+  div.tabbable
+    ul(class="nav nav-tabs")
+      li(class="active")
+        a(href="#tab1" data-toggle="tab") Статистика калькулятора жалюзи
+      li
+        a(href="#tab2" data-toggle="tab") Статистика калькулятора рольставен
+    div.tab-content
+      div(class="tab-pane active" id="tab1")
+          div
+            table(class="table table-striped table-bordered table-condensed")
+              tbody
+                tr
+                  td Дата и время
+                  td Параметры
+                  td Ширина, см
+                  td Высота, см
+                  td Количество
+                  td Результат
+                each lt, i in llist
+                  tr
+                    td=lt.datetime
+                    td=lt.name
+                    td=lt.width
+                    td=lt.height
+                    td=lt.kol
+                    td=lt.result
+      div(class="tab-pane" id="tab2")
+          div
+            table(class="table table-striped table-bordered table-condensed")
+              tbody
+                tr
+                  td Дата и время
+                  td Параметры
+                  td Ширина, см
+                  td Высота, см
+                  td Количество
+                  td Результат
+                each lt, i in rlist
+                  tr
+                    td=lt.datetime
+                    td=lt.name
+                    td=lt.width
+                    td=lt.height
+                    td=lt.kol
+                    td=lt.result
+  br
+  div(align="right")
+    button(id="deleteAll" type="button" class="btn btn-primary" align="right") Очистить статистику

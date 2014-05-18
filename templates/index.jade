@@ -17,9 +17,10 @@ block content
     br
 
     div(align="center")
-      button.btn Калькулятор жалюзи
-      button.btn Калькулятор рольставен
-      button(href="#myModal" role="button" class="btn" data-toggle="modal") Вызов замерщика
+      div(class="btn-group btns-cart")
+        button(href="#myModal1" data-toggle="modal" type="button" class="btn btn-primary") Калькулятор жалюзи
+        button(href="#myModal2" data-toggle="modal" type="button" class="btn btn-primary") Калькулятор рольставен
+        button(href="#myModal" data-toggle="modal" role="button" type="button" class="btn btn-primary") Вызов замерщика
 
     div(class="bs-component")
       div(class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true")
@@ -50,7 +51,90 @@ block content
               textarea(id="contact_message" style="width: 377px;" name="contact_message" rows="7" cols="86")
             div(class="modal-footer")
               button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
-              button(class="btn btn-primary" id='newOrder' href="#{homepage}/newOrder/") Отправить
+              button(class="btn btn-primary" id='newOrder' href="#{homepage}") Отправить
+
+    div(class="bs-component")
+      div(class="modal" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModal1Label" aria-hidden="true")
+        div(class="modal-dialog")
+          div(class="modal-content")
+            div(class="modal-header")
+              button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
+              h3(id="myModal1Label") Калькулятор жалюзи
+            div(class="modal-body")
+              label Тип жалюзи
+              br
+              select(class="form-control" id="select_lt" style="width: 377px;" name="select_lt")
+                each lcalc, i in lcalclist
+                  option(value="#{i}")=lcalc.name
+              br
+              label Размеры жалюзи
+              br
+              label Ширина, см   
+              br
+              input(id="width_lt" style="width: 377px;" type="text" name="width_lt" value="100" size="70")
+              br
+              label Высота, см   
+              br
+              input(id="height_lt" style="width: 377px;" type="text" name="height_lt" value="100" size="70")
+              br
+              br
+              label Количество изделий
+              br
+              input(id="kol_lt" style="width: 377px;" type="text" name="kol_lt" value="1" size="70")
+            div(class="modal-footer")
+              button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
+              button(class="btn btn-primary" id='calcLouvers' href="#{homepage}") Рассчитать
+
+    div(class="bs-component")
+      div(class="modal" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModal2Label" aria-hidden="true")
+        div(class="modal-dialog")
+          div(class="modal-content")
+            div(class="modal-header")
+              button(type="button" class="close" data-dismiss="modal" aria-hidden="true") ×
+              h3(id="myModal2Label") Калькулятор рольставен
+            div(class="modal-body")
+              label Тип профиля рольставен
+              br
+              select(class="form-control" id="select_rt" style="width: 377px;" name="select_lt")
+                each rcalc, i in rcalclist
+                  option(value="#{rcalc.name}")=(rcalc.name+" ("+rcalc.type_roller+")")
+              br
+              label Тип управления рольставен
+              br
+              select(class="form-control" id="select_contr" style="width: 377px;" name="select_lt")
+                each auto, i in autolist
+                  option(value="#{auto.calc_price}")=auto.name
+              br
+              label Автоматика (только для электропривода)
+              br
+              select(class="form-control" id="select_auto" style="width: 377px;" name="select_lt")
+                each contr, i in controllist
+                  option(value="#{contr.calc_price}")=contr.name
+                option(value="0") Без автоматики
+              br
+              label Монтаж рольставен
+              br
+              select(class="form-control" id="select_mont" style="width: 377px;" name="select_lt")
+                each mont, i in montagelist
+                  option(value="#{mont.calc_price}")=mont.name
+              br
+              label Размеры рольставен
+              br
+              label Ширина, см   
+              br
+              input(id="width_rt" style="width: 377px;" type="text" name="width_rt" value="100" size="70")
+              br
+              label Высота, см   
+              br
+              input(id="height_rt" style="width: 377px;" type="text" name="height_rt" value="100" size="70")
+              br
+              br
+              label Количество изделий
+              br
+              input(id="kol_rt" style="width: 377px;" type="text" name="kol_rt" value="1" size="70")
+            div(class="modal-footer")
+              button(class="btn" data-dismiss="modal" aria-hidden="true") Отменить
+              button(class="btn btn-primary" id='calcRollers' href="#{homepage}") Рассчитать
 
 block content2
     script.

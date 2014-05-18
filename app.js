@@ -13,17 +13,15 @@ var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/data');
 
-var homepage="http://0.0.0.0:3001";
+var homepage="http://localhost:3001";
 
 var app = express();
 app.set('views',__dirname+'/templates');
 app.set('view engine','jade');	//!!!!!JADE
 
 app.use(express.urlencoded());// то, что стало вместо bodyParser
-//app.use(express.bodyParser({uploadDir:'./templates/img'}));
 app.use(express.cookieParser('shhhh, very secret')); 
 app.use(express.session());
-//app.use(app.router);
 
 //авторизация
 app.use(function(req, res, next)
@@ -94,7 +92,6 @@ app.post('/login', function(req, res)
   {
     if (user) 
     {
-      // Regenerate session when signing in to prevent fixation
       req.session.regenerate(function()
       {
         // Store the user's primary key in the session store to be retrieved, or in this case the entire user object
@@ -115,6 +112,7 @@ app.post('/login', function(req, res)
 app.use("/styles", express.static(__dirname + '/templates/stylesheets'));
 app.use("/images",express.static(__dirname+'/templates/img'));
 app.use("/js",express.static(__dirname+'/templates/js'));
+app.use("/fonts",express.static(__dirname+'/templates/fonts'));
 app.use("/modules",express.static(__dirname+'/node_modules/'));
 
 app.get('/', routes.tohome(db,homepage));
@@ -131,7 +129,8 @@ app.get('/admin/rollers-positions', restrict,routes.admin_rollers0(db,homepage))
 app.get('/admin/orders', restrict,routes.admin_orders(db,homepage));
 app.get('/admin/images', restrict,routes.admin_images(db,homepage));
 app.get('/admin/adminlist',restrict,routes.adminlist(db,homepage));
-app.get('/admin/add_img',restrict,routes.add_img_with_name(db,homepage));
+//app.get('/admin/add_img',restrict,routes.add_img_with_name(db,homepage));
+app.get('/admin/calc_statistic',restrict,routes.Statistika(db,homepage));
 app.get('/login',routes.toCMS(db,homepage));
 
 app.get('/:static_page',routes.static_page(db,homepage));
@@ -182,8 +181,8 @@ server.listen(config.get('port'), function()
 {
 	server.close(function()
 	{
-   		server.listen(3001,'192.168.0.101')
-		homepage = "http://192.168.0.101:3001";
+   		server.listen(3001,'192.168.0.100')
+		homepage = "http://192.168.0.100:3001";
 		console.log("homepage = "+homepage);
 	});
 });*/
@@ -282,6 +281,18 @@ io.sockets.on('connection', function (socket)
 	{
 		routes.editContacts(db,'information',msg,socket);
 	});
+	socket.on('newLCalc',function(msg)
+	{
+		routes.calcPrice(db,'louvers',msg,socket);
+	})
+	socket.on('newRCalc',function(msg)
+	{
+		routes.calcPrice(db,'rollers',msg,socket);
+	})
+	socket.on('deleteStatistic',function()
+	{
+		var collection = db.get('calc_statistic');
+		collection.remove();
+		socket.emit("DelStatOk");
+	})
 });
-
-//http.createServer(app).listen(3001,'128.73.218.95/');

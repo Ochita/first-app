@@ -2,46 +2,63 @@ doctype html
 html
   head
     title= title
-    link(href="#{homepage}/styles/stylesheet.css" rel="stylesheet" media="screen")
+    //link(href="#{homepage}/styles/stylesheet.css" rel="stylesheet" media="screen")
+    link(href="#{homepage}/styles/bootstrap.css" rel="stylesheet")
+    link(href="#{homepage}/styles/font-awesome.min.css" rel="stylesheet")
+    link(href="#{homepage}/styles/jquery.bxslider.css" rel="stylesheet")
+    link(href="#{homepage}/styles/style.css" rel="stylesheet")
   body
-    script(src='#{homepage}/js/jquery.js')
-    script(src='#{homepage}/js/bootstrap.min.js')
+    //script(src='#{homepage}/js/jquery.js')
+    //script(src='#{homepage}/js/bootstrap.min.js')
+    script(src="#{homepage}/js/jquery.js")
+    script(src="#{homepage}/js/bootstrap.js")
+    script(src="#{homepage}/js/jquery.bxslider.min.js")
+    script(src="#{homepage}/js/jquery.blImageCenter.js")
+    script(src="#{homepage}/js/mimity.js")
     script(src="#{homepage}/socket.io/socket.io.js")
-    div(class="bs-component")
-    div(class="navbar navbar-default")
-      div(class="navbar-inner")
-        a(class="brand" href="#">Имя проекта)
-        ul(class="nav navbar-nav")
-          li
-            a(href="#{homepage}/") Выход на главную
-          li(id="acmp")
-            a(href="#{homepage}/admin") О компании
-          //li(class="dropdown" id="acmp")
-            //a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Статичные страницы
-              //b(class="caret")
-            //ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
-              //li
-                //a(tabindex="-1" href="#{homepage}/admin/static_texts") Текст
-              //li
-                //a(tabindex="-1" href="#{homepage}/admin/add_img") Добавить изображение
-          li(class="dropdown" id="ll")
-            a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Каталог
-              b(class="caret")
-            ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
-              li
-                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-types") Типы жалюзи
-              li
-                a(tabindex="-1" href="#{homepage}/admin/zhaluzi-positions") Виды жалюзи
-              li
-                a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставен
-              li
-                a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставен
-          li(id="img")
-            a(href="#{homepage}/admin/images") Изображения
-          li(id="ord")
-            a(href="#{homepage}/admin/orders") Заявки
-          li(id="alst")
-            a(href="#{homepage}/admin/adminlist") Учетные записи
-          li
-            a(href="#{homepage}/logout") Выход 
+    nav(class="navbar navbar-inverse" role="navigation")
+      div(class="container")
+        div(class="navbar-header")
+          button(type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse")
+            span(class="sr-only") Toggle navigation
+            span(class="icon-bar")
+            span(class="icon-bar")
+            span(class="icon-bar")
+          a(class="navbar-brand visible-xs" href="index.html") ООО МИКС-сервис
+        div(class="collapse navbar-collapse navbar-ex1-collapse")
+          ul(class="nav navbar-nav")
+            li
+              a(href="#{homepage}/") Главная
+            li(id="acmp")
+              a(href="#{homepage}/admin") О компании
+            //li(class="dropdown" id="acmp")
+              //a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Статичные страницы
+                //b(class="caret")
+              //ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+                //li
+                  //a(tabindex="-1" href="#{homepage}/admin/static_texts") Текст
+                //li
+                  //a(tabindex="-1" href="#{homepage}/admin/add_img") Добавить изображение
+            li(class="nav-dropdown" id="ll")
+              a(id="drop1" href="#" class="dropdown-toggle" data-toggle="dropdown") Каталог
+                b(class="caret")
+              ul(class="dropdown-menu" role="menu" aria-labelledby="dLabel")
+                li
+                  a(tabindex="-1" href="#{homepage}/admin/zhaluzi-types") Типы жалюзи
+                li
+                  a(tabindex="-1" href="#{homepage}/admin/zhaluzi-positions") Виды жалюзи
+                li
+                  a(tabindex="-1" href="#{homepage}/admin/rollers-types") Типы рольставен
+                li
+                  a(tabindex="-1" href="#{homepage}/admin/rollers-positions") Виды рольставен
+            li(id="img")
+              a(href="#{homepage}/admin/images") Изображения
+            li(id="ord")
+              a(href="#{homepage}/admin/orders") Заявки
+            li(id="k_stat")
+              a(href="#{homepage}/admin/calc_statistic") Статистика
+            li(id="alst")
+              a(href="#{homepage}/admin/adminlist") Учетные записи
+            li
+              a(href="#{homepage}/logout") Выход 
     block content

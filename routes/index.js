@@ -42,7 +42,6 @@ exports.add_img_with_name = function(db,homepage)
 function generate404(req,res,db,homepage)
 {
     var collection = db.get('louvers_type');
-    console.log(homepage+" hmp")
     collection.find({},{},function(e,docs)
     {
         docsl = docs;
@@ -103,10 +102,32 @@ exports.tohome = function(db,homepage)
             docsl = docs;
             collection = db.get('rollers_type');
             collection.find({},{},function(e,docs){
-            res.render('index', {
-                "louverslist" : docsl, "rollerslist":docs, title: 'Жалюзи и рольставни', "homepage": homepage
-            });
+                collection = db.get('louvers');
+                docsl2 = docs;
+                var options = {"sort": "type"};
+                collection.find({},options,function(e,docs){
+                    docsl3 = docs;
+                    collection = db.get('rollers');
+                    collection.find({type_global:"Рольставни"},options,function(e,docs){
+                        docsl4 = docs;
+                        collection.find({type_global:"Автоматика"},options,function(e,docs){
+                            docsl5 = docs;
+                            collection.find({type_global:"Тип управления"},options,function(e,docs){
+                            docsl6 = docs;
+                            collection.find({type_global:"Монтаж"},options,function(e,docs){
+                            docsl7 = docs;
+                    res.render('index', {
+                    "louverslist" : docsl, "rollerslist":docsl2, "lcalclist":docsl3, 
+                    rcalclist:docsl4,controllist:docsl5,autolist:docsl6,
+                    montagelist:docsl7,
+                    title: 'Жалюзи и рольставни', "homepage": homepage
+                    });
+                });
+                        });
+                        });
+                    });
         });
+});
     });
     };
 };
@@ -184,7 +205,7 @@ exports.itemslist=function(db,homepage,jadefile,itemcl)
                             "louverslist" : docsl, 
                             "rollerslist":docsl2, title: 'Жалюзи и рольставни', 
                             "homepage": homepage,
-                            "typename":typename, "id":id, "text":text, 
+                            "typename":typename.toUpperCase(), "id":id, "text":text, 
                             "itemslist":docs});
                         });
                         else
@@ -194,7 +215,7 @@ exports.itemslist=function(db,homepage,jadefile,itemcl)
                             "louverslist" : docsl, 
                             "rollerslist":docsl2, title: 'Жалюзи и рольставни', 
                             "homepage": homepage,
-                            "typename":typename, "id":id, "text":text, 
+                            "typename":typename.toUpperCase(), "id":id, "text":text, 
                             "itemslist":docs});
                         });
                     }
@@ -228,6 +249,23 @@ exports.adminlist = function(db,homepage)
         collection.find({},{login:1},function(e,docs)
         {
             res.render('adminlist',{namelist:docs,title: 'Список администраторов', "homepage": homepage});
+        });
+    }
+}
+
+exports.Statistika = function(db,homepage)
+{
+    return function(req,res)
+    {
+        var options = {"sort": "datetime"};
+        var collection = db.get('calc_statistic');
+        collection.find({type:"louvers"},options,function(e,docs)
+        {
+            docsl = docs;
+            collection.find({type:"rollers"},options,function(e,docs)
+            {
+            res.render('statistic',{llist:docsl,rlist:docs,title: 'Статистика', "homepage": homepage});
+        });
         });
     }
 }
@@ -370,13 +408,7 @@ exports.addOrder = function(db,name,mail,phone,address,data,comment,error)   //�
     comment = comment.stripTags();
     comment = comment.replaceAll("\n","<br>");
     collection.insert({name:name,mail:mail,phone:phone,address:address,order_data:data,comment:comment});
-    /*collection.find({},{},function(e,docs)
-    {
-        console.log(docs);
-    });*/
 }
-
-//editLouvers(db,'louvers',msg,socket);sendLInfo
 
 exports.addRoller = function(db,msg,socket)
 {
@@ -405,7 +437,7 @@ exports.addType = function(db,cl_name,name,description,socket)
     var error = false;
     var collection = db.get(cl_name);
     var documents = {name:name,adress:MakeAddress(name),description:description};
-    collection.find({adress:adress},{},function(e,docs)
+    collection.find({adress:MakeAddress(name)},{},function(e,docs)
     {
         if (docs.length!=0) error = true;
         //console.log("finding docs:");console.log(docs);console.log("after find: "+error);
@@ -551,6 +583,47 @@ exports.editContacts=function(db,cl_name,msg,socket)
             collection.update({name:'contacts'},{$set:documents},function(e,docs){});
         }
         if(error==false) socket.emit('editContactsOk');
+        if(error==true) socket.emit('Error');
+    });
+}
+
+exports.calcPrice=function(db,cl_name,msg,socket)
+{
+    console.log(msg);
+    var error = false;
+    var query = msg.type;
+    var collection = db.get(cl_name);
+    var result = (1/10000)*msg.width*msg.height;
+    if (result<1) result = 1;
+    result = Math.ceil(result);
+    collection.find({"name":msg.type},{},function(e,docs)
+    {
+        if (docs.length<=0) error = true;
+        else
+            {
+                result = result*(docs[0].calc_price);
+                console.log("res after find "+result)
+                if (result==NaN || result==0)
+                    error = true;
+                if (cl_name=="rollers")
+                {
+                    result = result+msg.control+msg.auto+msg.montage;
+                    query+= "; "+msg.ncontrol+"; "+msg.nauto+"; "+msg.nmontage;
+                    console.log("query"+query);
+                }
+                result = result*msg.kol;
+            }
+        if(error==false) {
+            socket.emit('newResult',
+            {
+                result:result,
+                str:"Примерная сумма: "+result+" руб."
+            });
+            collection = db.get("calc_statistic");
+            var now = new Date();
+            documents = {type:cl_name,datetime:now.toString(),name:query,width:msg.width,height:msg.height,kol:msg.kol,result:result}
+            collection.insert(documents);
+        }
         if(error==true) socket.emit('Error');
     });
 }

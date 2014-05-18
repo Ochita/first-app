@@ -48,7 +48,7 @@ window.onload = function(e,homepage)
         document.getElementById('name').value = msg.name;
         //type_roller:sel1,     //как-то надо заполнить селекты присланными значениями
         //type_global:sel2,
-        document.getElementById('cprice').value=msg.calc_price;
+        document.getElementById('cprice').value=msg.calc_price.toString();
         document.getElementById('pprice').value = msg.promo_price;
         document.getElementById('description').value = msg.description;
         oldN=msg.name;
@@ -61,7 +61,7 @@ window.onload = function(e,homepage)
         socket.emit('newLouvers',{
             name:document.getElementById('namen').value,
             type:sel1,
-            calc_price:document.getElementById('cpricen').value,
+            calc_price:parseInt(document.getElementById('cpricen').value,10),
             promo_price:document.getElementById('ppricen').value,
             description:document.getElementById('descriptionn').value
         });
@@ -75,7 +75,7 @@ window.onload = function(e,homepage)
             oldname:oldN,
             name:document.getElementById('name').value,
             type:sel1,
-            calc_price:document.getElementById('cprice').value,
+            calc_price:parseInt(document.getElementById('cprice').value,10),
             promo_price:document.getElementById('pprice').value,
             description:document.getElementById('description').value
             });
