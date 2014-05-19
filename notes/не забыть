@@ -17,7 +17,7 @@ cd ~/projects/node-tutorial/first-app/
 node app
 
 git add .
-git ci -m "initial_commit_9"
+git ci -m "initial_commit_10"
 git push -u origin master
 #kartachena
 #
@@ -34,7 +34,7 @@ mongorestore -db data STOREMONGO/data
 4. В админке добавить статистику пользования калькулятором+
 5. Переработать меню добавления типов и видов продукции чтобы было понятнее :)
 _______
-админка+
+админs+
 Нормальные логи
 статичные страницы+картинки с именем+редактирование лэйаута
 удаление картинок

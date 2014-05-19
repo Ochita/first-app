@@ -36,22 +36,54 @@ app.use(function(req, res, next)
   next();
 });     
 
-function addadmin(name,passw,res)
+function addadmin(name,passw,socket)
 {
 var collection = db.get('Admins');
-var docs = {login:name,salt:"salt",hash:"hash"}
-hash(passw, function(err, salt, hash)
+var test;
+collection.find({login:name},{},function(e,test){
+  if (test.length == 0 )
+  {
+    var docs = {login:name,salt:"salt",hash:"hash"}
+    hash(passw, function(err, salt, hash)
+    {
+    if (err) throw err;
+    docs.salt = salt;
+    docs.hash = hash.toString();
+    collection.insert(docs,{},function(e,docs1){
+    socket.emit('addSucsess');
+    console.log("addSucsess "+name);
+    });
+    });
+}
+else
 {
-  if (err) throw err;
-  docs.salt = salt;
-  docs.hash = hash.toString();
-  collection.insert(docs,{},function(e,docs1){
-  		res.redirect('/admin/adminlist')
-  });
-})
+    socket.emit('NameInUse');
+    console.log("Name In Use "+name);
+}
+});
 };
 
-function authenticate(name, pass, fn) 
+function deladmin(name,socket)
+{
+var collection = db.get('Admins');
+var test;
+collection.find({},{},function(e,test){
+  if (test.length > 1 )
+  {
+    collection.remove({login:name});
+    socket.emit('delSucsess');
+    console.log("remove "+name);
+  }
+  else
+  {
+    socket.emit('LastAdmin');
+    console.log("err last admin");
+  }
+});
+};
+
+
+function authenticate(name, pass, fn)
 {
   if (!module.parent) console.log('authenticating %s:%s', name, pass);
   var collection = db.get('Admins');
@@ -62,6 +94,38 @@ function authenticate(name, pass, fn)
   {
     if (docs[0].hash == hash.toString()) return fn(null, docs[0].login);
     fn(new Error('invalid password'));
+  })
+})
+};
+
+function editadmin(name, newpass, oldpass, socket)
+{
+  console.log("function call");
+  var collection = db.get('Admins');
+  collection.find({login:name},{},function(e,docs){
+  
+  if (docs.length > 0 )
+  hash(oldpass,  docs[0].salt, function(err, hasht)
+  {
+    if (docs[0].hash == hasht.toString()) 
+     {
+       var doc = {login:name,salt:"salt",hash:"hash"}
+       hash(newpass, function(err, salt, hash)
+        {
+            if (err) throw err;
+            doc.salt = salt;
+            doc.hash = hash.toString();
+            collection.update({login:name},{$set:doc},function(e,docs1){
+             socket.emit('editSucsess');
+             console.log("emit sucsess");
+             });
+        });
+    }
+     else
+     {
+        socket.emit('wrongPass');
+        console.log("emit wrong pass");
+    }
   })
 })
 };
@@ -192,6 +256,19 @@ io.set('log level', 1);
 
 io.sockets.on('connection', function (socket) 
 {
+	socket.on('deladmin', function (msg)
+    {
+        deladmin(msg.login,socket)
+    });
+    socket.on('newAdmin', function (msg)
+    {
+        addadmin(msg.login,msg.passwd,socket);
+    });
+    socket.on('editAdmin', function (msg)
+    {
+        console.log("socket input")
+        editadmin(msg.login,msg.newpasswd,msg.oldpasswd,socket);
+    });
 	socket.on('newOrder', function (msg) 
 	{
 		routes.addOrder(db,msg.contact_name,msg.contact_mail,msg.contact_phone,
